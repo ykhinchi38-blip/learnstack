@@ -1,0 +1,90 @@
+.section {
+  padding: var(--section-pad) 0;
+  background:
+    linear-gradient(90deg, var(--sage) 0 50%, var(--off-white) 50% 100%);
+  border-bottom: var(--border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.7fr) minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+}
+
+.mainCard,
+.sideList article {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  padding: 28px;
+}
+
+.mainCard {
+  background: var(--navy);
+  color: var(--white);
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.mainCard h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.mainCard p {
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 800;
+}
+
+.sideList {
+  display: grid;
+  gap: 18px;
+  counter-reset: path;
+}
+
+.sideList article {
+  counter-increment: path;
+  position: relative;
+  padding-left: 82px;
+  background: var(--paper);
+}
+
+.sideList article::before {
+  content: counter(path, decimal-leading-zero);
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: var(--navy);
+  color: var(--white);
+  border: var(--border);
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-weight: 900;
+}
+
+.sideList span {
+  display: none;
+}
+
+.sideList strong {
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.2rem;
+}
+
+.sideList p {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .section {
+    background: var(--sage);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

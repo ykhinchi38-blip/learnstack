@@ -1,0 +1,328 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(45, 107, 228, 0.28), transparent 33%),
+    linear-gradient(135deg, #071025 0%, #0d1b3e 54%, #101f46 100%);
+  color: #ffffff;
+  animation: loaderFadeOut 0.3s ease 1.9s forwards;
+}
+
+.loaderCard {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  width: min(100% - 40px, 390px);
+  text-align: center;
+}
+
+.floatingDots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floatingDots span {
+  position: absolute;
+  left: var(--dot-x);
+  top: var(--dot-y);
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: #ffd34d;
+  box-shadow: 0 0 18px rgba(255, 211, 77, 0.42);
+  animation: floatingDot 1.7s ease-in-out infinite;
+  animation-delay: var(--dot-delay);
+}
+
+.bookLoader {
+  position: relative;
+  width: clamp(156px, 42vw, 218px);
+  height: clamp(118px, 32vw, 158px);
+  perspective: 720px;
+}
+
+.bookGlow {
+  position: absolute;
+  inset: 18% 2% 0;
+  border-radius: 999px;
+  background: rgba(45, 107, 228, 0.38);
+  filter: blur(24px);
+  transform: translateY(22px);
+}
+
+.bookCover {
+  position: absolute;
+  top: 18px;
+  bottom: 20px;
+  width: 50%;
+  border: 3px solid #0d1b3e;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 32%),
+    #f5f0e8;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+  transform-style: preserve-3d;
+}
+
+.leftCover {
+  left: 0;
+  border-radius: 12px 4px 4px 12px;
+  border-right-width: 2px;
+  transform-origin: right center;
+  animation: openLeftPage 1.45s ease-in-out infinite;
+}
+
+.rightCover {
+  right: 0;
+  border-left-width: 2px;
+  border-radius: 4px 12px 12px 4px;
+  transform-origin: left center;
+  animation: openRightPage 1.45s ease-in-out infinite;
+}
+
+.bookSpine {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  bottom: 18px;
+  z-index: 3;
+  width: 9px;
+  border: 2px solid #0d1b3e;
+  background: #2d6be4;
+  box-shadow: 0 0 16px rgba(45, 107, 228, 0.4);
+  transform: translateX(-50%);
+}
+
+.bookLine {
+  position: absolute;
+  z-index: 4;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(13, 27, 62, 0.38);
+  animation: lineLift 1.45s ease-in-out infinite;
+}
+
+.bookLineOne {
+  left: 24px;
+  right: 60%;
+  top: 58px;
+}
+
+.bookLineTwo {
+  left: 60%;
+  right: 24px;
+  top: 82px;
+  animation-delay: 0.08s;
+}
+
+.loaderCopy {
+  display: grid;
+  gap: 8px;
+}
+
+.loaderCopy strong {
+  color: #ffffff;
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-shadow: 0 8px 28px rgba(45, 107, 228, 0.32);
+}
+
+.loaderCopy span {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.loaderProgress {
+  width: min(100%, 230px);
+  height: 8px;
+  overflow: hidden;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 3px 3px 0 #2d6be4;
+}
+
+.loaderProgress span {
+  display: block;
+  width: 44%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ffd34d, #2d6be4);
+  animation: loaderProgress 1.25s ease-in-out infinite;
+}
+
+.loaderDots {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.loaderDots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2d6be4;
+  animation: dotPulse 0.85s ease-in-out infinite;
+}
+
+.loaderDots span:nth-child(2) {
+  background: #ffd34d;
+  animation-delay: 0.12s;
+}
+
+.loaderDots span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.progressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  width: 100%;
+  height: 3px;
+  background: #2d6be4;
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.progressActive {
+  animation: progressSweep 0.72s ease forwards;
+}
+
+@keyframes loaderFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes openLeftPage {
+  0%,
+  100% {
+    transform: rotateY(0deg) translateY(0);
+  }
+
+  48% {
+    transform: rotateY(28deg) translateY(-3px);
+  }
+}
+
+@keyframes openRightPage {
+  0%,
+  100% {
+    transform: rotateY(0deg) translateY(0);
+  }
+
+  48% {
+    transform: rotateY(-28deg) translateY(-3px);
+  }
+}
+
+@keyframes lineLift {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes loaderProgress {
+  0% {
+    transform: translateX(-115%);
+  }
+
+  55% {
+    transform: translateX(60%);
+  }
+
+  100% {
+    transform: translateX(230%);
+  }
+}
+
+@keyframes floatingDot {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0) scale(0.88);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: translateY(-10px) scale(1);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0) scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1);
+  }
+}
+
+@keyframes progressSweep {
+  0% {
+    transform: scaleX(0);
+  }
+
+  72% {
+    transform: scaleX(0.84);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@media (max-width: 560px) {
+  .loaderCard {
+    gap: 16px;
+    width: min(100% - 28px, 340px);
+  }
+
+  .loaderCopy span {
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader,
+  .leftCover,
+  .rightCover,
+  .bookLine,
+  .loaderProgress span,
+  .floatingDots span,
+  .loaderDots span,
+  .progressActive {
+    animation-duration: 0.01ms;
+    animation-delay: 0s;
+  }
+}

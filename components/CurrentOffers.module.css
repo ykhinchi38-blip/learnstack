@@ -1,0 +1,136 @@
+.offersSection {
+  background: #0d1b3e;
+  padding: 58px 0;
+  border-bottom: var(--border);
+  color: #ffffff;
+}
+
+.offersBox {
+  display: grid;
+  gap: 24px;
+  border: 3px solid #2d6be4;
+  box-shadow: 6px 6px 0 #2d6be4;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    #1a2f5e;
+  background-size: 24px 24px;
+  padding: clamp(24px, 5vw, 38px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.kicker {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid #ffffff;
+  background: #2d6be4;
+  color: #ffffff;
+  padding: 5px 9px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.offersBox h2 {
+  max-width: 760px;
+  margin-top: 14px;
+  color: #ffffff;
+}
+
+.header p {
+  max-width: 320px;
+  color: rgba(255, 255, 255, 0.76);
+  font-weight: 800;
+}
+
+.offerGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.offerCard {
+  display: grid;
+  gap: 16px;
+  border: 2px solid #ffffff;
+  box-shadow: 3px 3px 0 #0d1b3e;
+  background: #f5f0e8;
+  color: #0d1b3e;
+  padding: 18px;
+}
+
+.offerCard strong {
+  display: block;
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.offerCard span {
+  display: block;
+  margin-top: 8px;
+  color: #2d6be4;
+  font-weight: 900;
+}
+
+.offerCard button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: 2px solid #0d1b3e;
+  background: #2d6be4;
+  color: #ffffff;
+  box-shadow: 3px 3px 0 #0d1b3e;
+  padding: 10px 12px;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-weight: 900;
+  text-align: left;
+}
+
+.offerCard small {
+  font-family: var(--font-body), var(--font-body-fallback);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.skeletonGrid span {
+  min-height: 116px;
+  border: 2px solid rgba(255, 255, 255, 0.42);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  background-size: 200% 100%;
+  animation: offerSkeleton 1.2s ease-in-out infinite;
+}
+
+@keyframes offerSkeleton {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .header {
+    display: grid;
+    align-items: start;
+  }
+
+  .offerGrid,
+  .skeletonGrid {
+    grid-template-columns: 1fr;
+  }
+}

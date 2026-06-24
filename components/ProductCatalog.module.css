@@ -1,0 +1,85 @@
+.catalog {
+  display: grid;
+  gap: 26px;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: flex-end;
+}
+
+.searchBox label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.searchBox input {
+  background: var(--paper);
+}
+
+.count {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--sage);
+  padding: 14px 16px;
+  font-weight: 900;
+  min-width: max-content;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filters button {
+  border: var(--border);
+  background: var(--white);
+  box-shadow: 3px 3px 0 var(--black);
+  padding: 8px 12px;
+  font-weight: 900;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.filters button:hover,
+.filters .active {
+  background: var(--blue);
+  color: var(--white);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .tools,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .count {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 0 10px 0;
+    scrollbar-width: thin;
+  }
+
+  .filters button {
+    white-space: nowrap;
+  }
+}

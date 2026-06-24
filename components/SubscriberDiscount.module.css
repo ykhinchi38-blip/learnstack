@@ -1,0 +1,138 @@
+.box,
+.compactBox {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background:
+    linear-gradient(90deg, rgba(45, 107, 228, 0.14) 1px, transparent 1px),
+    var(--navy);
+  background-size: 26px 26px;
+  color: var(--white);
+  padding: 34px;
+  display: grid;
+  gap: 24px;
+}
+
+.compactBox {
+  padding: 24px;
+}
+
+.kicker {
+  display: inline-flex;
+  width: max-content;
+  background: var(--blue);
+  color: var(--white);
+  border: var(--border);
+  padding: 5px 9px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.box h2,
+.compactBox h2 {
+  max-width: 820px;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+.box mark,
+.compactBox mark {
+  background: var(--blue);
+  color: var(--white);
+  padding: 0 8px;
+}
+
+.box p,
+.compactBox p {
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 740px;
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+.form label {
+  color: var(--blue);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+}
+
+.success,
+.error {
+  background: var(--white);
+  color: var(--black);
+  border: var(--border);
+  box-shadow: 3px 3px 0 var(--black);
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.success p,
+.error p {
+  color: var(--black);
+  font-weight: 800;
+}
+
+.error {
+  background: var(--danger);
+}
+
+.error a {
+  color: var(--black);
+  font-weight: 900;
+  text-decoration: underline;
+}
+
+.codeBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: var(--border);
+  background: var(--blue);
+  color: var(--white);
+  padding: 14px;
+}
+
+.codeBox strong {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: clamp(1.05rem, 6vw, 1.5rem);
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+.codeBox button {
+  border: var(--border);
+  background: var(--white);
+  color: var(--black);
+  padding: 8px 12px;
+  font-weight: 900;
+}
+
+@media (max-width: 700px) {
+  .inputRow,
+  .codeBox {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .box,
+  .compactBox {
+    padding: 20px;
+  }
+
+  .codeBox button {
+    width: 100%;
+  }
+}

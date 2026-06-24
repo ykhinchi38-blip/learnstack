@@ -1,0 +1,472 @@
+.freeResourcesPage {
+  --free-navy: #0d1b3e;
+  --free-blue: #2d6be4;
+  --free-blue-deep: #1a3a7c;
+  --free-paper: #f5f0e8;
+  --free-white: #ffffff;
+  --free-yellow: #ffde59;
+  background: var(--free-paper);
+  color: var(--free-navy);
+  overflow-x: hidden;
+}
+
+.freeResourcesPage p {
+  color: rgba(13, 27, 62, 0.76);
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.7;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 5px solid var(--free-blue);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255, 222, 89, 0.3), transparent 26%),
+    linear-gradient(135deg, var(--free-navy) 0 68%, #10285d 68% 100%);
+  color: var(--free-white);
+  padding: clamp(66px, 9vw, 118px) 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  border-top: 2px solid rgba(255, 255, 255, 0.26);
+  background: var(--free-yellow);
+}
+
+.heroGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.7fr);
+  gap: clamp(32px, 7vw, 86px);
+  align-items: center;
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  margin-bottom: 16px;
+  color: var(--free-yellow);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.heroCopy h1 {
+  max-width: 900px;
+  color: var(--free-white);
+  font-size: clamp(2.55rem, 7vw, 5rem);
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+
+.heroCopy p {
+  max-width: 760px;
+  margin-top: 24px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: clamp(1.03rem, 2.2vw, 1.25rem);
+}
+
+.heroCopy .primaryButton {
+  margin-top: 28px;
+}
+
+.heroPreview {
+  position: relative;
+  width: min(100%, 360px);
+  margin-left: auto;
+  aspect-ratio: 0.78;
+}
+
+.previewSheet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  gap: 16px;
+  border: 4px solid var(--free-navy);
+  background:
+    linear-gradient(135deg, var(--free-white) 0 76%, rgba(255, 222, 89, 0.7) 76% 100%);
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.28);
+  color: var(--free-navy);
+  padding: clamp(24px, 4vw, 36px);
+}
+
+.previewSheet::before,
+.previewSheet::after {
+  content: "";
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(13, 27, 62, 0.18);
+}
+
+.previewSheet span {
+  color: var(--free-blue);
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.previewSheet strong {
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: clamp(2.4rem, 6vw, 4.3rem);
+  line-height: 0.9;
+}
+
+.previewSheet small {
+  color: rgba(13, 27, 62, 0.72);
+  font-weight: 900;
+}
+
+.previewTab {
+  position: absolute;
+  right: -14px;
+  top: 34px;
+  border: 3px solid var(--free-navy);
+  background: var(--free-yellow);
+  box-shadow: 4px 4px 0 var(--free-navy);
+  color: var(--free-navy);
+  padding: 10px 12px;
+  font-weight: 900;
+  transform: rotate(5deg);
+}
+
+.benefitsSection,
+.featuredSection,
+.includedSection,
+.ctaSection {
+  padding: clamp(64px, 8vw, 98px) 0;
+}
+
+.sectionHeader {
+  max-width: 860px;
+  margin-bottom: 30px;
+}
+
+.sectionHeader h2,
+.featuredCopy h2,
+.includedPanel h2,
+.ctaSection h2 {
+  color: var(--free-navy);
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.sectionHeader .eyebrow,
+.featuredCopy .eyebrow,
+.includedPanel .eyebrow {
+  color: var(--free-blue);
+}
+
+.benefitGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.benefitCard,
+.pdfCard,
+.includedPanel {
+  border: 3px solid var(--free-navy);
+  background: var(--free-white);
+  box-shadow: 6px 6px 0 var(--free-blue);
+}
+
+.benefitCard {
+  min-height: 100%;
+  padding: 26px;
+}
+
+.benefitCard h3,
+.pdfDetails h3 {
+  margin-bottom: 12px;
+  color: var(--free-navy);
+  font-size: 1.35rem;
+}
+
+.featuredSection {
+  border-top: 3px solid var(--free-navy);
+  border-bottom: 3px solid var(--free-navy);
+  background: var(--free-white);
+}
+
+.featuredGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.58fr) minmax(0, 1.42fr);
+  gap: clamp(30px, 6vw, 72px);
+  align-items: start;
+}
+
+.featuredCopy p {
+  max-width: 680px;
+  margin-top: 18px;
+}
+
+.pdfCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: stretch;
+  padding: clamp(20px, 4vw, 28px);
+}
+
+.badge {
+  position: absolute;
+  right: 18px;
+  top: -18px;
+  border: 3px solid var(--free-navy);
+  background: var(--free-yellow);
+  box-shadow: 4px 4px 0 var(--free-navy);
+  color: var(--free-navy);
+  padding: 9px 12px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.pdfCover {
+  display: grid;
+  align-content: space-between;
+  min-height: 260px;
+  border: 3px solid var(--free-navy);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 38%),
+    var(--free-blue-deep);
+  box-shadow: inset 12px 0 0 rgba(0, 0, 0, 0.18);
+  color: var(--free-white);
+  padding: 18px;
+}
+
+.pdfCover strong {
+  color: var(--free-yellow);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pdfCover span {
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+}
+
+.pdfDetails {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.subtitle {
+  color: var(--free-blue-deep);
+  font-weight: 900;
+}
+
+.sampleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.sampleGrid .pdfCard {
+  grid-template-columns: 1fr;
+  align-content: start;
+}
+
+.sampleGrid .pdfCover {
+  min-height: 190px;
+}
+
+.sampleList {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.sampleList li {
+  position: relative;
+  color: rgba(13, 27, 62, 0.8);
+  font-weight: 900;
+  padding-left: 22px;
+}
+
+.sampleList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--free-navy);
+  background: var(--free-yellow);
+  transform: translateY(-50%);
+}
+
+.includedSection {
+  background:
+    radial-gradient(circle at 15% 18%, rgba(45, 107, 228, 0.12), transparent 24%),
+    var(--free-paper);
+}
+
+.includedPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(280px, 1fr);
+  gap: clamp(28px, 5vw, 56px);
+  align-items: center;
+  padding: clamp(26px, 5vw, 46px);
+}
+
+.includedGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.includedGrid span {
+  display: inline-flex;
+  border: 2px solid var(--free-navy);
+  background: var(--free-yellow);
+  box-shadow: 3px 3px 0 var(--free-navy);
+  color: var(--free-navy);
+  padding: 10px 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ctaSection {
+  border-top: 3px solid var(--free-navy);
+  text-align: center;
+}
+
+.ctaSection h2 {
+  max-width: 850px;
+  margin: 0 auto 28px;
+}
+
+.ctaActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.primaryButton,
+.secondaryButton,
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  border: 3px solid var(--free-navy);
+  box-shadow: 4px 4px 0 var(--free-navy);
+  padding: 13px 18px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.primaryButton,
+.downloadButton {
+  background: var(--free-blue);
+  color: var(--free-white);
+}
+
+.secondaryButton {
+  background: var(--free-white);
+  color: var(--free-navy);
+}
+
+.primaryButton:hover,
+.secondaryButton:hover,
+.downloadButton:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--free-navy);
+}
+
+@media (max-width: 980px) {
+  .heroGrid,
+  .featuredGrid,
+  .includedPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .heroPreview {
+    margin: 0 auto;
+  }
+
+  .benefitGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sampleGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 54px 0 64px;
+  }
+
+  .heroCopy {
+    text-align: center;
+  }
+
+  .heroCopy p {
+    margin-inline: auto;
+  }
+
+  .heroPreview {
+    width: min(100%, 300px);
+  }
+
+  .previewTab {
+    right: 8px;
+  }
+
+  .pdfCard {
+    grid-template-columns: 1fr;
+  }
+
+  .pdfCover {
+    min-height: 220px;
+  }
+
+  .includedGrid {
+    display: grid;
+  }
+
+  .includedGrid span {
+    justify-content: center;
+  }
+
+  .ctaActions {
+    display: grid;
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .downloadButton {
+    width: 100%;
+  }
+}

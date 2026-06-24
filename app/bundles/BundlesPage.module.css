@@ -1,0 +1,82 @@
+.section {
+  padding: var(--section-pad) 0;
+  background: var(--off-white);
+  border-bottom: var(--border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1fr);
+  gap: 28px;
+}
+
+.mainCard,
+.sideList article {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  padding: 28px;
+}
+
+.mainCard {
+  background: var(--navy);
+  color: var(--white);
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.mainCard h2 {
+  color: var(--white);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.mainCard p {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 800;
+}
+
+.sideList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sideList article {
+  min-height: 190px;
+  display: grid;
+  align-content: space-between;
+  background: var(--sage);
+}
+
+.sideList article:nth-child(3n) {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.sideList span {
+  color: var(--blue);
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.sideList strong {
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.2rem;
+}
+
+.sideList p {
+  color: var(--black);
+}
+
+.sideList article:nth-child(3n) p,
+.sideList article:nth-child(3n) span {
+  color: var(--white);
+}
+
+@media (max-width: 960px) {
+  .grid,
+  .sideList {
+    grid-template-columns: 1fr;
+  }
+}

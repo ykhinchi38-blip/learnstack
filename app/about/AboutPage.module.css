@@ -1,0 +1,147 @@
+.storySection {
+  padding: var(--section-pad) 0;
+  background:
+    linear-gradient(90deg, var(--sage) 0 62%, var(--off-white) 62% 100%);
+  border-bottom: var(--border);
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.64fr);
+  gap: 44px;
+  align-items: center;
+}
+
+.storyBlock,
+.brandBlock,
+.valueCard {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  padding: 28px;
+}
+
+.storyBlock h2,
+.valuesSection h2,
+.roadmapSection h2 {
+  margin: 16px 0 22px;
+}
+
+.storyBlock p + p {
+  margin-top: 14px;
+}
+
+.brandBlock {
+  background: var(--navy);
+  color: var(--white);
+  min-height: 280px;
+  display: grid;
+  align-content: center;
+  gap: 20px;
+  transform: rotate(1deg);
+}
+
+.brandBlock strong {
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 0.92;
+}
+
+.brandBlock span {
+  font-weight: 900;
+}
+
+.valuesSection {
+  padding: var(--section-pad) 0;
+  background: var(--navy);
+  color: var(--white);
+  border-bottom: var(--border);
+}
+
+.valuesSection h2 {
+  color: var(--white);
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.valueCard:nth-child(2) {
+  transform: translateY(22px);
+  background: var(--sage);
+}
+
+.valueCard svg {
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+
+.valueCard h3 {
+  margin-bottom: 10px;
+  color: var(--black);
+}
+
+.roadmapSection {
+  padding: var(--section-pad) 0;
+  background: var(--off-white);
+  border-bottom: var(--border);
+}
+
+.roadmapSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: grid;
+  gap: 10px;
+  max-width: 860px;
+}
+
+.roadmapSection li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: var(--border);
+  background: var(--white);
+  padding: 12px;
+  font-weight: 900;
+}
+
+.roadmapSection li span {
+  background: var(--blue);
+  color: var(--white);
+  border: 2px solid var(--black);
+  padding: 4px 7px;
+  font-size: 0.74rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .storySection {
+    background: var(--sage);
+  }
+
+  .storyGrid,
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .brandBlock,
+  .valueCard:nth-child(2) {
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .storyBlock,
+  .brandBlock,
+  .valueCard {
+    padding: 20px;
+  }
+
+  .roadmapSection li {
+    align-items: start;
+    flex-direction: column;
+  }
+}

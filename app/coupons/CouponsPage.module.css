@@ -1,0 +1,47 @@
+.section {
+  padding: var(--section-pad) 0;
+  background: var(--navy);
+  border-bottom: var(--border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.mainCard {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--off-white);
+  padding: 28px;
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  position: sticky;
+  top: 120px;
+}
+
+.mainCard h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.mainCard p {
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.grid > div:last-child {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mainCard {
+    position: static;
+  }
+}

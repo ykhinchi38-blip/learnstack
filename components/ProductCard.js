@@ -1,0 +1,105 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import styles from "./ProductCard.module.css";
+
+const categoryAccentColors = {
+  Programming: "#2d6be4",
+  "Data Science": "#4ECDC4",
+  "Web Development": "#4a8af4"
+};
+
+function getCardAccent(product) {
+  return categoryAccentColors[product.category] || product.accentColor || "#2d6be4";
+}
+
+function getSpineLabel(product) {
+  return (product.logoText || product.title.slice(0, 3)).toUpperCase();
+}
+
+function ProductImage({ product }) {
+  const fallback = "/images/covers/python-handbook.png";
+  const [src, setSrc] = useState(product.image || product.coverImage || fallback);
+
+  if (!src) {
+    return (
+      <div className={styles.imageFallback} role="img" aria-label={`${product.title} PDF cover`}>
+        <span>{getSpineLabel(product)}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={`${product.title} cover`}
+      className={styles.coverImage}
+      loading="lazy"
+      onError={() => setSrc(fallback)}
+    />
+  );
+}
+
+export default function ProductCard({ product, showDetails = true, buyLabel = "Buy on Gumroad" }) {
+  const cardAccent = getCardAccent(product);
+  const router = useRouter();
+  const [opening, setOpening] = useState(false);
+  const prefetched = useRef(false);
+  const detailSlug = product.slug || product.id;
+  const detailHref = product.detailPath || `${product.audience === "kids" ? "/kids" : "/products"}/${detailSlug}`;
+
+  useEffect(() => {
+    setOpening(false);
+    prefetched.current = false;
+  }, [detailHref]);
+
+  function prefetchDetails() {
+    if (prefetched.current) return;
+    prefetched.current = true;
+    router.prefetch(detailHref);
+  }
+
+  function openDetails() {
+    if (opening) return;
+    setOpening(true);
+    router.push(detailHref);
+  }
+
+  return (
+    <article className={styles.card} style={{ "--accent": cardAccent }}>
+      <div className={styles.accent} />
+      <div className={styles.coverWrap}>
+        <ProductImage product={product} />
+      </div>
+
+      <div className={styles.body}>
+        <h3>{product.title}</h3>
+        <div className={styles.metaRow}>
+          <strong>{product.priceDisplay || "View price"}</strong>
+        </div>
+        <div className={styles.actions}>
+          {showDetails && (
+            <button
+              type="button"
+              className={styles.detailsButton}
+              disabled={opening}
+              aria-label={opening ? `Opening ${product.title} details` : `Open ${product.title} details`}
+              onFocus={prefetchDetails}
+              onClick={openDetails}
+              onPointerEnter={prefetchDetails}
+              onTouchStart={prefetchDetails}
+            >
+              {opening && <span className={styles.buttonSpinner} aria-hidden="true" />}
+              <span>{opening ? "Opening..." : "Details"}</span>
+            </button>
+          )}
+          <Link href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className="brutalButton">
+            {buyLabel}
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
+}

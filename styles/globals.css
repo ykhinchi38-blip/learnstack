@@ -1,0 +1,382 @@
+:root {
+  --black: #0A0A0A;
+  --navy: #0d1b3e;
+  --blue: #2d6be4;
+  --off-white: #F5F0E8;
+  --sage: #F5F0E8;
+  --white: #FFFFFF;
+  --paper: #FFFDF8;
+  --text-primary: #0A0A0A;
+  --text-secondary: #343434;
+  --text-muted: #6B6B6B;
+  --line: #0A0A0A;
+  --success: #C9F2D1;
+  --danger: #FFE0E0;
+  --sky: #EAF2FF;
+
+  --font-display-fallback: "Space Grotesk", Arial, sans-serif;
+  --font-body-fallback: "Inter", Arial, sans-serif;
+  --font-mono-fallback: "JetBrains Mono", Consolas, monospace;
+
+  --border: 2.5px solid var(--black);
+  --shadow: 4px 4px 0 var(--black);
+  --shadow-hover: 6px 6px 0 var(--black);
+  --container: 1180px;
+  --container-wide: 1360px;
+  --section-pad: 88px;
+  --nav-height: 76px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: var(--off-white);
+  color: var(--text-primary);
+  font-family: var(--font-body), var(--font-body-fallback);
+  font-size: 16px;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(10, 10, 10, 0.10) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.32;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-display), var(--font-display-fallback);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(2.55rem, 7vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 3.4vw, 1.5rem);
+}
+
+p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background-color: #2d6be4;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #2d6be4;
+  color: #ffffff;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: pageFadeIn 0.25s ease;
+}
+
+.container {
+  width: min(100% - 40px, var(--container));
+  margin-inline: auto;
+}
+
+.containerWide {
+  width: min(100% - 40px, var(--container-wide));
+  margin-inline: auto;
+}
+
+.section {
+  padding: var(--section-pad) 0;
+}
+
+.sectionOffWhite {
+  background: var(--off-white);
+}
+
+.sectionSage {
+  background: var(--sage);
+}
+
+.sectionNavy {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.brutalCard {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  border-radius: var(--card-radius, 0);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.brutalCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.brutalButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  border-radius: var(--button-radius, 0);
+  background: var(--blue);
+  color: var(--white);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.brutalButton:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.brutalButtonBlue {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.brutalButtonWhite {
+  background: var(--white);
+  color: var(--black);
+}
+
+.brutalButtonDark {
+  background: var(--black);
+  color: var(--white);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: 100%;
+  border: var(--border);
+  border-radius: 2px;
+  padding: 4px 8px;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pageHero {
+  position: relative;
+  padding: 72px 0 56px;
+  border-bottom: var(--border);
+  background:
+    linear-gradient(135deg, var(--off-white) 0%, var(--off-white) 58%, var(--sage) 58%, var(--sage) 100%);
+  overflow: hidden;
+}
+
+.pageHero::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  bottom: -70px;
+  width: 230px;
+  height: 230px;
+  border: var(--border);
+  background: var(--blue);
+  box-shadow: var(--shadow);
+  transform: rotate(8deg);
+  z-index: 0;
+}
+
+.pageHero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.pageEyebrow {
+  display: inline-flex;
+  margin-bottom: 18px;
+  background: var(--blue);
+  color: var(--white);
+  border: var(--border);
+  padding: 6px 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pageTitle {
+  max-width: 900px;
+  margin-bottom: 18px;
+}
+
+.pageLead {
+  max-width: 760px;
+  font-size: 1.08rem;
+  color: var(--text-secondary);
+}
+
+.breadcrumbText {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.breadcrumbText a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: var(--border);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--black);
+  padding: 14px 16px;
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 4px rgba(45, 107, 228, 0.35);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --section-pad: 68px;
+    --nav-height: 68px;
+  }
+
+  .container,
+  .containerWide {
+    width: min(100% - 28px, var(--container));
+  }
+
+  .pageHero {
+    padding: 54px 0 44px;
+  }
+
+  .pageHero::after {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --section-pad: 56px;
+    --shadow: 3px 3px 0 var(--black);
+    --shadow-hover: 4px 4px 0 var(--black);
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  .container,
+  .containerWide {
+    width: min(100% - 22px, var(--container));
+  }
+
+  .brutalButton {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+  }
+}

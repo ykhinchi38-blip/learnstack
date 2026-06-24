@@ -1,0 +1,87 @@
+.contactSection {
+  padding: var(--section-pad) 0;
+  background:
+    linear-gradient(135deg, var(--off-white) 0 52%, var(--sage) 52% 100%);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.form,
+.infoBox {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  padding: 28px;
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.form label {
+  display: grid;
+  gap: 7px;
+  font-weight: 900;
+}
+
+.form button {
+  justify-self: start;
+}
+
+.infoBox {
+  position: sticky;
+  top: 120px;
+  background: var(--navy);
+  color: var(--white);
+}
+
+.infoBox h2 {
+  margin: 16px 0;
+  color: var(--white);
+}
+
+.infoBox p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.infoBox a {
+  display: block;
+  margin-top: 18px;
+  font-weight: 900;
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .contactSection {
+    background: var(--sage);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .infoBox {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .form,
+  .infoBox {
+    padding: 20px;
+  }
+
+  .form button {
+    width: 100%;
+  }
+}

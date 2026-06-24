@@ -1,0 +1,158 @@
+.hero {
+  background: var(--navy);
+  color: var(--white);
+  border-bottom: var(--border);
+  padding: 64px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -80px -90px auto;
+  width: 300px;
+  height: 300px;
+  background: var(--blue);
+  border: var(--border);
+  transform: rotate(10deg);
+}
+
+.heroGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.48fr);
+  gap: 36px;
+  align-items: flex-end;
+}
+
+.hero h1 {
+  color: var(--white);
+  max-width: 830px;
+  margin: 18px 0;
+}
+
+.hero p {
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 720px;
+  font-size: 1.08rem;
+}
+
+.hero :global(.breadcrumbText) {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.catalogStats {
+  display: grid;
+  gap: 12px;
+}
+
+.catalogStats div {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  color: var(--black);
+  padding: 16px;
+}
+
+.catalogStats strong {
+  display: block;
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.catalogStats span {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-weight: 900;
+}
+
+.catalogSection {
+  background: var(--off-white);
+  padding: var(--section-pad) 0;
+  border-bottom: var(--border);
+}
+
+.sampleSection {
+  background: var(--off-white);
+  padding: 46px 0;
+  border-bottom: var(--border);
+}
+
+.sampleCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  border: var(--border);
+  background: var(--white);
+  box-shadow: var(--shadow);
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.sampleCard h2 {
+  margin: 14px 0 10px;
+  color: var(--navy);
+}
+
+.sampleCard p {
+  max-width: 760px;
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.sampleCard :global(.brutalButton) {
+  white-space: nowrap;
+}
+
+.emptyState {
+  border: var(--border);
+  box-shadow: var(--shadow);
+  background: var(--white);
+  padding: 28px;
+}
+
+.emptyState h2 {
+  margin-bottom: 8px;
+}
+
+.discountWrap {
+  background: var(--sage);
+  padding: 72px 0;
+}
+
+@media (max-width: 880px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .catalogStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .hero {
+    padding: 48px 0;
+  }
+
+  .hero::after {
+    display: none;
+  }
+
+  .catalogStats {
+    grid-template-columns: 1fr;
+  }
+
+  .sampleCard {
+    grid-template-columns: 1fr;
+  }
+
+  .sampleCard :global(.brutalButton) {
+    width: 100%;
+    white-space: normal;
+  }
+}
