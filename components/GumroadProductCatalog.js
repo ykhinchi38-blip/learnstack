@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import styles from "./GumroadProductCatalog.module.css";
 
 const CACHE_KEY = "learnstack:gumroad-products:regular:v2";
@@ -43,11 +44,15 @@ function ProductImage({ product }) {
   const [src, setSrc] = useState(product.coverImage || "/images/covers/python-handbook.png");
 
   return (
-    <img
+    <Image
       src={src}
-      alt={`${product.name} cover`}
+      alt={`${product.name} handbook cover by LearnStack`}
       className={styles.cover}
+      width={320}
+      height={426}
+      sizes="(max-width: 700px) 100vw, 320px"
       loading="lazy"
+      unoptimized={String(src).startsWith("http")}
       onError={() => setSrc("/images/covers/python-handbook.png")}
     />
   );

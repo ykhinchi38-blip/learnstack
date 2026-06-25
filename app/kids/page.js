@@ -10,9 +10,9 @@ import styles from "./KidsPage.module.css";
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "Kids Coding Books | LearnStack",
+  title: "Kids Learning Books, Stories & Curiosity Books",
   description:
-    "Explore colourful, beginner-friendly coding and computer books for kids with easy explanations, activities, and instant PDF access.",
+    "Explore LearnStack Kids books with moral stories, curiosity-building questions, fun learning content, and digital access for young learners.",
   path: "/kids"
 });
 

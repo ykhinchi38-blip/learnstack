@@ -1,4 +1,3 @@
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,36 +8,21 @@ import ScrollToTop from "@/components/ScrollToTop";
 import SlowConnectionWarner from "@/components/SlowConnectionWarner";
 import InstallBanner from "@/components/InstallBanner";
 import { ToastProvider } from "@/context/ToastContext";
-import { createMetadata } from "@/lib/seo";
+import { createMetadata, defaultDescription, defaultTitle, seoKeywords, titleTemplate } from "@/lib/seo";
 import "@/styles/globals.css";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-display",
-  display: "swap"
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "800", "900"],
-  variable: "--font-body",
-  display: "swap"
-});
-
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-mono",
-  display: "swap"
-});
 
 export const metadata = {
   ...createMetadata({
-    title: "Premium PDF Handbooks for CSE Students",
-    description: "LearnStack creates premium educational PDF handbooks for CSE students and developers. Learn, build, and grow with practical learning resources.",
+    title: defaultTitle,
+    description: defaultDescription,
     path: "/"
   }),
+  title: {
+    default: defaultTitle,
+    template: titleTemplate
+  },
+  description: defaultDescription,
+  keywords: seoKeywords,
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -64,7 +48,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-IN" className={`${spaceGrotesk.variable} ${inter.variable} ${jetBrainsMono.variable}`}>
+    <html lang="en-IN">
       <body>
         <NextTopLoader
           color="#2d6be4"

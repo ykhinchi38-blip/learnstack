@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import ProductDetailView from "@/components/ProductDetailView";
 import JsonLd from "@/components/JsonLd";
 import { getKidsProductBySlug, getKidsProducts } from "@/lib/gumroad";
-import { breadcrumbJsonLd, createMetadata, productJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -24,19 +24,25 @@ export async function generateMetadata({ params }) {
   }
 
   return createMetadata({
-    title: product.metaTitle || product.title,
-    description: product.summary || product.limitedDescription,
+    title: `${product.title} Kids Learning Book`,
+    description: productSeoDescription(product, "kids"),
     path: `/kids/${product.slug || params.slug}`,
-    image: product.image || product.coverImage,
+    image: product.image || product.coverImage || undefined,
     type: "product"
   });
 }
 
 export default async function KidsProductDetailPage({ params }) {
-  const product = await getKidsProductBySlug(params.slug);
+  const [product, products] = await Promise.all([
+    getKidsProductBySlug(params.slug),
+    getKidsProducts()
+  ]);
   if (!product) notFound();
 
   const productPath = `/kids/${product.slug || params.slug}`;
+  const relatedProducts = products
+    .filter((item) => item.id !== product.id)
+    .slice(0, 3);
 
   return (
     <>
@@ -52,6 +58,7 @@ export default async function KidsProductDetailPage({ params }) {
         catalogHref="/kids"
         catalogLabel="Kids Books"
         eyebrow="LearnStack Kids Book"
+        relatedProducts={relatedProducts}
       />
     </>
   );

@@ -9,8 +9,8 @@ import styles from "./ProductsPage.module.css";
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "LearnStack Handbooks",
-  description: "Premium PDF handbooks for students, developers, and self-learners.",
+  title: "PDF Handbooks for CSE Students & Developers",
+  description: "Browse LearnStack PDF handbooks for programming, Docker, Linux, SQL, API development, GitHub, ChatGPT prompts, and more. Practical digital books for students and developers.",
   path: "/products"
 });
 

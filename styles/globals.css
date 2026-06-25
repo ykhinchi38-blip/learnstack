@@ -14,9 +14,12 @@
   --danger: #FFE0E0;
   --sky: #EAF2FF;
 
-  --font-display-fallback: "Space Grotesk", Arial, sans-serif;
-  --font-body-fallback: "Inter", Arial, sans-serif;
-  --font-mono-fallback: "JetBrains Mono", Consolas, monospace;
+  --font-display: "Space Grotesk", "Arial Black", "Trebuchet MS", Arial, sans-serif;
+  --font-body: "Inter", Arial, Helvetica, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+  --font-display-fallback: "Space Grotesk", "Arial Black", "Trebuchet MS", Arial, sans-serif;
+  --font-body-fallback: "Inter", Arial, Helvetica, sans-serif;
+  --font-mono-fallback: "JetBrains Mono", Consolas, "Courier New", monospace;
 
   --border: 2.5px solid var(--black);
   --shadow: 4px 4px 0 var(--black);
@@ -70,7 +73,7 @@ h6 {
   margin: 0;
   font-family: var(--font-display), var(--font-display-fallback);
   line-height: 0.98;
-  letter-spacing: -0.045em;
+  letter-spacing: 0;
   font-weight: 700;
 }
 

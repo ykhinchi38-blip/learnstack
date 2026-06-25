@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./ProductCard.module.css";
@@ -19,9 +20,9 @@ function getSpineLabel(product) {
   return (product.logoText || product.title.slice(0, 3)).toUpperCase();
 }
 
-function ProductImage({ product }) {
+function ProductImage({ product, priority = false }) {
   const fallback = "/images/covers/python-handbook.png";
-  const [src, setSrc] = useState(product.image || product.coverImage || fallback);
+  const [src, setSrc] = useState(product.image || product.coverImage || (product.audience === "kids" ? "" : fallback));
 
   if (!src) {
     return (
@@ -32,17 +33,22 @@ function ProductImage({ product }) {
   }
 
   return (
-    <img
+    <Image
       src={src}
-      alt={`${product.title} cover`}
+      alt={`${product.title} ${product.audience === "kids" ? "kids learning book" : "handbook"} cover by LearnStack`}
       className={styles.coverImage}
-      loading="lazy"
-      onError={() => setSrc(fallback)}
+      width={276}
+      height={368}
+      sizes="(max-width: 390px) 180px, (max-width: 560px) 94px, 138px"
+      priority={priority}
+      loading={priority ? "eager" : "lazy"}
+      unoptimized={String(src).startsWith("http")}
+      onError={() => setSrc(product.audience === "kids" ? "" : fallback)}
     />
   );
 }
 
-export default function ProductCard({ product, showDetails = true, buyLabel = "Buy on Gumroad" }) {
+export default function ProductCard({ product, showDetails = true, buyLabel = "Buy on Gumroad", priority = false }) {
   const cardAccent = getCardAccent(product);
   const router = useRouter();
   const [opening, setOpening] = useState(false);
@@ -71,7 +77,7 @@ export default function ProductCard({ product, showDetails = true, buyLabel = "B
     <article className={styles.card} style={{ "--accent": cardAccent }}>
       <div className={styles.accent} />
       <div className={styles.coverWrap}>
-        <ProductImage product={product} />
+        <ProductImage product={product} priority={priority} />
       </div>
 
       <div className={styles.body}>

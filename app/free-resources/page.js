@@ -4,9 +4,9 @@ import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import styles from "./FreeResourcesPage.module.css";
 
 export const metadata = createMetadata({
-  title: "Free Resources",
+  title: "Free PDF Samples & Learning Resources",
   description:
-    "Download LearnStack sample chapters, quick references, and beginner-friendly learning PDFs before choosing a complete handbook.",
+    "Download free LearnStack sample PDFs and explore digital learning resources before buying premium handbooks and kids books.",
   path: "/free-resources"
 });
 

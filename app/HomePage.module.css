@@ -581,6 +581,257 @@
   border-bottom: var(--border);
 }
 
+.kidsDiscoverySection {
+  position: relative;
+  overflow: hidden;
+  border-bottom: var(--border);
+  background:
+    linear-gradient(135deg, rgba(255, 211, 77, 0.38) 0 34%, transparent 34% 100%),
+    linear-gradient(180deg, #fff9df 0%, #eaf7ff 100%);
+  padding: clamp(64px, 8vw, 98px) 0;
+}
+
+.kidsDiscoveryGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(360px, 1fr);
+  gap: clamp(28px, 5vw, 56px);
+  align-items: center;
+}
+
+.kidsDiscoveryCopy {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+
+.kidsLabel {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid #0d1b3e;
+  background: #ff8fab;
+  color: #0d1b3e;
+  box-shadow: 3px 3px 0 #ffd34d;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.kidsDiscoveryCopy h2 {
+  margin-top: 16px;
+  color: #0d1b3e;
+  font-size: clamp(2.05rem, 5vw, 3.55rem);
+}
+
+.kidsDiscoveryCopy p {
+  max-width: 660px;
+  margin-top: 18px;
+  color: rgba(13, 27, 62, 0.78);
+  font-size: clamp(1rem, 1.7vw, 1.1rem);
+  font-weight: 800;
+  line-height: 1.72;
+}
+
+.kidsChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.kidsChips span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 2px solid #0d1b3e;
+  background: #ffffff;
+  color: #0d1b3e;
+  box-shadow: 2px 2px 0 #7cdebc;
+  padding: 6px 10px;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.kidsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.kidsActions :global(.brutalButton) {
+  background: #2d6be4;
+  color: #ffffff;
+}
+
+.kidsSecondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border: 3px solid #0d1b3e;
+  background: #ffffff;
+  color: #0d1b3e;
+  box-shadow: 4px 4px 0 #ff8fab;
+  padding: 12px 18px;
+  font-weight: 900;
+  line-height: 1;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.kidsSecondaryButton:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #ff8fab;
+}
+
+.kidsPreviewPanel {
+  position: relative;
+  min-width: 0;
+  border: 3px solid #0d1b3e;
+  background:
+    linear-gradient(135deg, rgba(255, 143, 171, 0.16) 0 42%, transparent 42% 100%),
+    #ffffff;
+  box-shadow: 8px 8px 0 #2d6be4;
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.kidsDecor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.kidsCloudOne,
+.kidsCloudTwo {
+  position: absolute;
+  width: 76px;
+  height: 34px;
+  border: 2px solid #0d1b3e;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.kidsCloudOne {
+  top: 18px;
+  right: 24px;
+  box-shadow: 4px 4px 0 #7cdebc;
+}
+
+.kidsCloudTwo {
+  left: 20px;
+  bottom: 18px;
+  box-shadow: 4px 4px 0 #ffd34d;
+}
+
+.kidsStarOne,
+.kidsStarTwo {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #0d1b3e;
+  background: #ffd34d;
+  transform: rotate(45deg);
+}
+
+.kidsStarOne {
+  top: 26px;
+  left: 42px;
+}
+
+.kidsStarTwo {
+  right: 52px;
+  bottom: 34px;
+  background: #ff8fab;
+}
+
+.kidsPencil {
+  position: absolute;
+  right: 28px;
+  top: 112px;
+  width: 18px;
+  height: 94px;
+  border: 2px solid #0d1b3e;
+  background: #ffd34d;
+  box-shadow: 3px 3px 0 #0d1b3e;
+  transform: rotate(12deg);
+}
+
+.kidsPreviewGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.kidsPreviewCard {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  border: 2px solid #0d1b3e;
+  background: #fffdf8;
+  box-shadow: 4px 4px 0 #0d1b3e;
+  padding: 12px;
+  color: #0d1b3e;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.kidsPreviewCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #0d1b3e;
+}
+
+.kidsBookBadge {
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid #0d1b3e;
+  background: #7cdebc;
+  padding: 3px 7px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.kidsCoverImage,
+.kidsCoverFallback {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border: 2px solid #0d1b3e;
+  background: #eaf7ff;
+  object-fit: cover;
+}
+
+.kidsCoverFallback {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, #ff8fab 0 50%, #ffd34d 50% 100%);
+}
+
+.kidsCoverFallback span {
+  border: 2px solid #0d1b3e;
+  background: #ffffff;
+  padding: 6px;
+  font-weight: 900;
+}
+
+.kidsPreviewCard strong {
+  color: #0d1b3e;
+  font-size: 0.98rem;
+  line-height: 1.08;
+  word-break: break-word;
+}
+
+.kidsPreviewCard small {
+  color: #0d1b3e;
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
 .previewStack {
   position: relative;
   min-height: 430px;
@@ -986,6 +1237,7 @@
   .featuredGrid,
   .featureGrid,
   .purchaseGrid,
+  .kidsPreviewGrid,
   .testimonialGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1084,6 +1336,7 @@
   .featuredGrid,
   .featureGrid,
   .purchaseGrid,
+  .kidsDiscoveryGrid,
   .testimonialGrid,
   .newsletterForm {
     grid-template-columns: 1fr;
@@ -1112,6 +1365,23 @@
 
   .storyTeaser {
     padding: 46px 0;
+  }
+
+  .kidsDiscoverySection {
+    padding: 52px 0;
+  }
+
+  .kidsPreviewPanel {
+    box-shadow: 5px 5px 0 #2d6be4;
+  }
+
+  .kidsPreviewGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kidsActions,
+  .kidsSecondaryButton {
+    width: 100%;
   }
 
   .storyTeaserInner {

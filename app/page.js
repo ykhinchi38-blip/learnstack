@@ -5,15 +5,15 @@ import SubscriberDiscount from "@/components/SubscriberDiscount";
 import CurrentOffers from "@/components/CurrentOffers";
 import Icon from "@/components/Icon";
 import JsonLd from "@/components/JsonLd";
-import { getRegularProducts } from "@/lib/gumroad";
+import { getKidsProducts, getRegularProducts } from "@/lib/gumroad";
 import { createMetadata, breadcrumbJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import styles from "./HomePage.module.css";
 
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "Premium PDF Handbooks for CSE Students",
-  description: "LearnStack sells premium educational PDF handbooks for CSE students and developers. Learn faster with practical guides, examples, and revision notes.",
+  title: "Premium PDF Handbooks for Students, Developers & Kids",
+  description: "Explore LearnStack digital handbooks for CSE students, developers, coding beginners, and kids learning books. Get demo previews, instant access, and practical learning PDFs.",
   path: "/"
 });
 
@@ -39,6 +39,8 @@ const purchaseInfo = [
   ["Read anywhere", "Downloadable PDFs work on phones, tablets, laptops, and PDF reader apps.", "file"],
   ["Support when needed", "If delivery or access fails, contact support with your Gumroad order email.", "bolt"]
 ];
+
+const kidsFeatures = ["Moral stories", "Curiosity questions", "Fun learning", "Demo available", "Digital access"];
 
 const feedbackCards = [
   ["Aarav Sharma", "CSE Student", "The layout makes revision much faster. The notes are clean, structured, and easy to read before exams."],
@@ -204,7 +206,9 @@ function BookshelfIllustration() {
 
 export default async function HomePage() {
   const products = await getRegularProducts();
+  const kidsProducts = await getKidsProducts();
   const featured = products.slice(0, 3);
+  const kidsPreview = kidsProducts.slice(0, 3);
 
   return (
     <>
@@ -244,19 +248,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="about" className={styles.storyTeaser}>
-        <div className={`container ${styles.storyTeaserInner}`}>
-          <div className={styles.storyTeaserCopy}>
-            <span className="tag">ABOUT LEARNSTACK</span>
-            <h2>Built by a student, for every student.</h2>
-            <p>
-              LearnStack began with a simple habit: making clear, structured notes that helped students learn better. Today, that habit has grown into practical handbooks for learners everywhere.
-            </p>
-            <Link href="/story" className={styles.storyButton}>Read Our Story</Link>
-          </div>
-        </div>
-      </section>
-
       <section className={styles.statsStrip}>
         <div className={`container ${styles.statsGrid}`}>
           {stats.map(([number, label]) => (
@@ -290,6 +281,92 @@ export default async function HomePage() {
       <section className={styles.discountSection}>
         <div className="container">
           <SubscriberDiscount />
+        </div>
+      </section>
+
+      <section className={styles.kidsDiscoverySection} aria-labelledby="homepage-kids-heading">
+        <div className={`container ${styles.kidsDiscoveryGrid}`}>
+          <div className={styles.kidsDiscoveryCopy}>
+            <span className={styles.kidsLabel}>LEARNSTACK KIDS</span>
+            <h2 id="homepage-kids-heading">Fun Learning Books for Curious Minds</h2>
+            <p>
+              Explore colorful kids books with moral stories, curiosity-building questions, simple activities, and smart
+              learning ideas made for young readers.
+            </p>
+            <div className={styles.kidsChips} aria-label="LearnStack Kids book features">
+              {kidsFeatures.map((feature) => (
+                <span key={feature}>{feature}</span>
+              ))}
+            </div>
+            <div className={styles.kidsActions}>
+              <Link href="/kids" className="brutalButton">Explore Kids Books</Link>
+              <Link href="/free-resources" className={styles.kidsSecondaryButton}>View Free Samples</Link>
+            </div>
+          </div>
+
+          <div className={styles.kidsPreviewPanel} aria-label="LearnStack Kids book previews">
+            <div className={styles.kidsDecor} aria-hidden="true">
+              <span className={styles.kidsCloudOne} />
+              <span className={styles.kidsCloudTwo} />
+              <span className={styles.kidsStarOne} />
+              <span className={styles.kidsStarTwo} />
+              <span className={styles.kidsPencil} />
+            </div>
+            <div className={styles.kidsPreviewGrid}>
+              {kidsPreview.length > 0 ? kidsPreview.map((product, index) => {
+                const coverImage = product.image || product.coverImage;
+
+                return (
+                <Link
+                  href={product.detailPath || `/kids/${product.slug || product.id}`}
+                  className={styles.kidsPreviewCard}
+                  key={product.id}
+                >
+                  <span className={styles.kidsBookBadge}>Kids Book</span>
+                  {coverImage ? (
+                    <Image
+                      src={coverImage}
+                      alt={`${product.title} kids learning book cover by LearnStack`}
+                      width={210}
+                      height={280}
+                      sizes="(max-width: 680px) 45vw, 180px"
+                      priority={false}
+                      unoptimized={coverImage.startsWith("http")}
+                      className={styles.kidsCoverImage}
+                    />
+                  ) : (
+                    <div className={styles.kidsCoverFallback} role="img" aria-label={`${product.title} kids learning book cover by LearnStack`}>
+                      <span>{product.logoText || "KID"}</span>
+                    </div>
+                  )}
+                  <strong>{product.title}</strong>
+                  <small>{product.priceDisplay || "Rs. 149"}</small>
+                </Link>
+              );}) : [0, 1, 2].map((item) => (
+                <Link href="/kids" className={styles.kidsPreviewCard} key={item}>
+                  <span className={styles.kidsBookBadge}>Kids Book</span>
+                  <div className={styles.kidsCoverFallback} role="img" aria-label="LearnStack Kids learning book preview">
+                    <span>{["CODE", "FUN", "IDEA"][item]}</span>
+                  </div>
+                  <strong>{["Coding Adventures", "Moral Stories", "Curiosity Book"][item]}</strong>
+                  <small>Rs. 149</small>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" className={styles.storyTeaser}>
+        <div className={`container ${styles.storyTeaserInner}`}>
+          <div className={styles.storyTeaserCopy}>
+            <span className="tag">ABOUT LEARNSTACK</span>
+            <h2>Built by a student, for every student.</h2>
+            <p>
+              LearnStack began with a simple habit: making clear, structured notes that helped students learn better. Today, that habit has grown into practical handbooks for learners everywhere.
+            </p>
+            <Link href="/story" className={styles.storyButton}>Read Our Story</Link>
+          </div>
         </div>
       </section>
 

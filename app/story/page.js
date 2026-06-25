@@ -44,9 +44,9 @@ const founderStorySections = [
 ];
 
 export const metadata = createMetadata({
-  title: "The Story Behind LearnStack",
+  title: "Our Story | Why LearnStack Was Created",
   description:
-    "Learn why LearnStack builds practical PDF handbooks, coding resources, and kids learning books for students who want clearer learning.",
+    "Read the story behind LearnStack and how practical, student-friendly notes became digital handbooks for learners, developers, and kids.",
   path: "/story"
 });
 
