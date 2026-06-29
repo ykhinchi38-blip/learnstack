@@ -2,6 +2,7 @@ import Link from "next/link";
 import ProductCatalog from "@/components/ProductCatalog";
 import SubscriberDiscount from "@/components/SubscriberDiscount";
 import JsonLd from "@/components/JsonLd";
+import PageEntrance from "@/components/PageEntrance";
 import { getRegularProductsResult } from "@/lib/gumroad";
 import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import styles from "./ProductsPage.module.css";
@@ -18,7 +19,7 @@ export default async function ProductsPage() {
   const { products, error } = await getRegularProductsResult();
 
   return (
-    <>
+    <PageEntrance variant="fadeUp" stagger>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Handbooks", href: "/products" }])} />
 
       <section className={styles.hero}>
@@ -42,20 +43,30 @@ export default async function ProductsPage() {
       <section className={styles.sampleSection}>
         <div className={`container ${styles.sampleCard}`}>
           <div>
-            <span className="tag">Free PDF Sample</span>
-            <h2>LearnStack Adult Handbook Sample</h2>
+            <span className="tag">Sample Preview</span>
+            <h2>Student handbook samples are coming soon.</h2>
             <p>
-              Preview our student and developer handbook style, including code examples, revision pages, common
-              mistakes, interview notes, and learning structure.
+              Existing handbook PDFs will be converted into clean preview samples before download links are added.
             </p>
           </div>
-          <a
-            href="/downloads/LearnStack_Free_Sample_PDF_Adult_READY_TO_UPLOAD.pdf"
-            className="brutalButton"
-            download
-          >
-            Download Adult Sample PDF
-          </a>
+          <Link href="/free-samples" className="brutalButton">
+            Check Sample Preview Status
+          </Link>
+        </div>
+      </section>
+
+      <section className={styles.suggestSection} aria-labelledby="suggest-handbook-heading">
+        <div className={`container ${styles.suggestCard}`}>
+          <div>
+            <span className="tag">Suggest a Topic</span>
+            <h2 id="suggest-handbook-heading">Want a handbook on a topic we have not covered yet?</h2>
+            <p>
+              Students and self-learners can suggest new LearnStack handbooks, tools, coding topics, placement topics, or practical PDF ideas.
+            </p>
+          </div>
+          <Link href="/suggest-a-book" className="brutalButton brutalButtonWhite">
+            Suggest a Handbook
+          </Link>
         </div>
       </section>
 
@@ -82,6 +93,6 @@ export default async function ProductsPage() {
           <SubscriberDiscount />
         </div>
       </section>
-    </>
+    </PageEntrance>
   );
 }

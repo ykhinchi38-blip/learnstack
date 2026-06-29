@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { productAudienceLabel, productDetailHref } from "@/lib/productRouting";
 import styles from "./ProductCard.module.css";
 
 const categoryAccentColors = {
@@ -35,7 +36,7 @@ function ProductImage({ product, priority = false }) {
   return (
     <Image
       src={src}
-      alt={`${product.title} ${product.audience === "kids" ? "kids learning book" : "handbook"} cover by LearnStack`}
+      alt={`${product.title} ${productAudienceLabel(product).toLowerCase()} cover by LearnStack`}
       className={styles.coverImage}
       width={276}
       height={368}
@@ -48,13 +49,13 @@ function ProductImage({ product, priority = false }) {
   );
 }
 
-export default function ProductCard({ product, showDetails = true, buyLabel = "Buy on Gumroad", priority = false }) {
+export default function ProductCard({ product, showDetails = true, buyLabel = "Buy on Gumroad", priority = false, showSample = false }) {
   const cardAccent = getCardAccent(product);
   const router = useRouter();
   const [opening, setOpening] = useState(false);
   const prefetched = useRef(false);
-  const detailSlug = product.slug || product.id;
-  const detailHref = product.detailPath || `${product.audience === "kids" ? "/kids" : "/products"}/${detailSlug}`;
+  const detailHref = productDetailHref(product);
+  const cardSummary = product.summary || product.tagline || product.limitedDescription;
 
   useEffect(() => {
     setOpening(false);
@@ -82,6 +83,7 @@ export default function ProductCard({ product, showDetails = true, buyLabel = "B
 
       <div className={styles.body}>
         <h3>{product.title}</h3>
+        {cardSummary && <p className={styles.summary}>{cardSummary}</p>}
         <div className={styles.metaRow}>
           <strong>{product.priceDisplay || "View price"}</strong>
         </div>
@@ -104,6 +106,11 @@ export default function ProductCard({ product, showDetails = true, buyLabel = "B
           <Link href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className="brutalButton">
             {buyLabel}
           </Link>
+          {showSample && product.sampleUrl && (
+            <Link href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleButton}>
+              View Free Sample
+            </Link>
+          )}
         </div>
       </div>
     </article>

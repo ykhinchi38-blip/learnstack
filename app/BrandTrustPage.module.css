@@ -1,0 +1,398 @@
+.section {
+  padding: var(--section-pad) 0;
+  border-bottom: var(--border);
+}
+
+.sectionAlt {
+  padding: var(--section-pad) 0;
+  border-bottom: var(--border);
+  background: var(--sage);
+}
+
+.amazonHero {
+  position: relative;
+  padding: clamp(46px, 7vw, 74px) 0;
+  border-bottom: var(--border);
+  background:
+    linear-gradient(135deg, var(--off-white) 0 63%, rgba(45, 107, 228, 0.12) 63% 100%),
+    var(--off-white);
+  overflow: hidden;
+}
+
+.amazonHero::after {
+  content: "";
+  position: absolute;
+  right: -74px;
+  bottom: -86px;
+  width: 240px;
+  height: 240px;
+  border: var(--border);
+  background: var(--blue);
+  box-shadow: var(--shadow);
+  transform: rotate(8deg);
+}
+
+.amazonHeroGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.54fr);
+  gap: clamp(26px, 5vw, 52px);
+  align-items: end;
+}
+
+.amazonHero h1 {
+  max-width: 920px;
+  margin: 16px 0;
+  color: var(--navy);
+  font-size: clamp(2.45rem, 6vw, 4.4rem);
+  line-height: 0.95;
+}
+
+.amazonHero p {
+  max-width: 760px;
+  color: rgba(13, 27, 62, 0.78);
+  font-size: clamp(1.02rem, 1.7vw, 1.14rem);
+  font-weight: 800;
+  line-height: 1.65;
+}
+
+.amazonHeroCards {
+  display: grid;
+  gap: 12px;
+}
+
+.amazonHeroCards article {
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 4px 4px 0 var(--blue);
+  padding: 16px;
+}
+
+.amazonHeroCards strong {
+  display: block;
+  color: var(--navy);
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  line-height: 1;
+}
+
+.amazonHeroCards span {
+  display: block;
+  margin-top: 6px;
+  color: rgba(13, 27, 62, 0.72);
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.availabilityNote {
+  display: grid;
+  gap: 8px;
+  max-width: 840px;
+  margin-top: 24px;
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 4px 4px 0 var(--blue);
+  padding: clamp(16px, 2.6vw, 22px);
+}
+
+.availabilityNote h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  line-height: 1;
+}
+
+.availabilityNote p {
+  max-width: none;
+  margin: 0;
+  color: rgba(13, 27, 62, 0.78);
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.availabilityNote small {
+  color: var(--navy);
+  font-size: 0.84rem;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.gridTwo,
+.gridThree {
+  display: grid;
+  gap: clamp(22px, 3vw, 30px);
+}
+
+.gridTwo {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gridThree {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card,
+.highlight {
+  min-width: 0;
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 5px 5px 0 var(--blue);
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.highlight {
+  background:
+    linear-gradient(135deg, rgba(255, 211, 77, 0.3) 0 34%, transparent 34% 100%),
+    var(--white);
+}
+
+.card h2,
+.card h3,
+.highlight h2,
+.highlight h3 {
+  margin-bottom: 12px;
+  color: var(--navy);
+  line-height: 1.02;
+}
+
+.card p,
+.highlight p,
+.lead {
+  color: rgba(13, 27, 62, 0.76);
+  font-size: clamp(1rem, 1.4vw, 1.08rem);
+  font-weight: 800;
+  line-height: 1.7;
+}
+
+.highlight p + p,
+.card p + p {
+  margin-top: 12px;
+}
+
+.imageCard {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  margin: 0;
+}
+
+.imageCard img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 2px solid var(--navy);
+  background: var(--off-white);
+  object-fit: cover;
+  object-position: center;
+}
+
+.lead {
+  max-width: 820px;
+  margin: 14px 0 28px;
+  font-size: clamp(1.05rem, 1.6vw, 1.16rem);
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.list li {
+  border-top: 2px solid rgba(13, 27, 62, 0.16);
+  padding-top: 12px;
+  color: rgba(13, 27, 62, 0.78);
+  font-weight: 900;
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.sampleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.sampleCard {
+  display: grid;
+  grid-template-columns: clamp(92px, 10vw, 124px) minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 20px);
+  align-items: start;
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 5px 5px 0 var(--blue);
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.sampleCover {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border: 2px solid var(--navy);
+  background:
+    linear-gradient(135deg, #2d6be4 0 50%, #ffd34d 50% 100%);
+  color: var(--white);
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-weight: 900;
+  text-align: center;
+  overflow: hidden;
+}
+
+.sampleCover span {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background: rgba(13, 27, 62, 0.92);
+  color: var(--white);
+  font-size: 0.95rem;
+}
+
+.sampleCoverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sampleBody {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.sampleBody h3 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(1.18rem, 1.9vw, 1.55rem);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.sampleBody p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  color: rgba(13, 27, 62, 0.74);
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.sampleBody .fullTitle {
+  -webkit-line-clamp: 2;
+  color: rgba(13, 27, 62, 0.74);
+  font-size: 0.9rem;
+}
+
+.amazonMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.amazonMeta span {
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid rgba(13, 27, 62, 0.2);
+  background: var(--off-white);
+  color: var(--navy);
+  padding: 4px 7px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.miniButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid var(--navy);
+  background: var(--white);
+  box-shadow: 2px 2px 0 var(--blue);
+  padding: 7px 10px;
+  color: var(--navy);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.sampleActions,
+.sampleLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.sampleLinks {
+  margin-top: 14px;
+}
+
+.sampleLinks a {
+  border: 2px solid var(--navy);
+  background: var(--off-white);
+  box-shadow: 2px 2px 0 var(--blue);
+  color: var(--navy);
+  padding: 7px 10px;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.bottomNote {
+  margin-top: 24px;
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 4px 4px 0 var(--blue);
+  padding: 16px 18px;
+}
+
+.bottomNote p {
+  margin: 0;
+  color: rgba(13, 27, 62, 0.78);
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .gridTwo,
+  .gridThree,
+  .sampleGrid,
+  .amazonHeroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .amazonHero::after {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .sampleCard,
+  .actions {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .sampleCover {
+    width: 120px;
+  }
+
+  .sampleBody p {
+    -webkit-line-clamp: unset;
+  }
+}

@@ -4,7 +4,13 @@ import { useMemo, useState } from "react";
 import ProductCard from "./ProductCard";
 import styles from "./ProductCatalog.module.css";
 
-export default function ProductCatalog({ products }) {
+export default function ProductCatalog({
+  products,
+  searchLabel = "Search handbooks",
+  searchPlaceholder = "Search Python, SQL, API, DSA...",
+  countLabel = "handbooks",
+  buyLabel = "Buy on Gumroad"
+}) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
 
@@ -27,15 +33,15 @@ export default function ProductCatalog({ products }) {
     <div className={styles.catalog}>
       <div className={styles.tools}>
         <div className={styles.searchBox}>
-          <label htmlFor="catalog-search">Search handbooks</label>
+          <label htmlFor="catalog-search">{searchLabel}</label>
           <input
             id="catalog-search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search Python, SQL, API, DSA..."
+            placeholder={searchPlaceholder}
           />
         </div>
-        <div className={styles.count}>Showing {filtered.length} handbooks</div>
+        <div className={styles.count}>Showing {filtered.length} {countLabel}</div>
       </div>
 
       <div className={styles.filters} aria-label="Product category filters">
@@ -53,7 +59,7 @@ export default function ProductCatalog({ products }) {
 
       <div className={styles.grid}>
         {filtered.map((product, index) => (
-          <ProductCard key={product.id} product={product} priority={index < 2} />
+          <ProductCard key={product.id} product={product} priority={index < 2} buyLabel={buyLabel} />
         ))}
       </div>
     </div>

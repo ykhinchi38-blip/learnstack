@@ -1,0 +1,82 @@
+.form {
+  display: grid;
+  gap: 18px;
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 6px 6px 0 var(--blue);
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form label {
+  display: grid;
+  gap: 8px;
+  color: var(--navy);
+  font-weight: 900;
+}
+
+.form span {
+  font-size: 0.86rem;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  border: 3px solid var(--navy);
+  background: #fffdf8;
+  color: var(--navy);
+  box-shadow: 3px 3px 0 rgba(13, 27, 62, 0.14);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.4;
+  padding: 12px 13px;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  outline: 3px solid rgba(45, 107, 228, 0.3);
+  outline-offset: 2px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 2px solid rgba(13, 27, 62, 0.12);
+  padding-top: 18px;
+}
+
+.footer p {
+  max-width: 540px;
+  margin: 0;
+  color: rgba(13, 27, 62, 0.68);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .fieldGrid,
+  .footer {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    display: grid;
+  }
+
+  .footer button {
+    width: 100%;
+  }
+}

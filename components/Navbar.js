@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { getLocalProducts } from "@/data/products";
+import { productDetailHref } from "@/lib/productRouting";
 import { site } from "@/lib/site";
 import styles from "./Navbar.module.css";
 
@@ -12,27 +13,26 @@ const mainLinks = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Handbooks" },
   { href: "/kids", label: "Kids Books" },
-  { href: "/free-resources", label: "Free Resources" }
+  { href: "/resources", label: "Resources" },
+  { href: "/about", label: "About" },
+  { href: "/help", label: "Help" }
 ];
 
 const moreLinks = [
-  { href: "/categories", label: "Categories" },
-  { href: "/bundles", label: "Bundles" },
+  { href: "/life-career", label: "Life & Career" },
+  { href: "/free-samples", label: "Free Samples" },
+  { href: "/why-learnstack", label: "Why LearnStack" },
   { href: "/story", label: "Our Story" },
-  { href: "/#about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/coupons", label: "Coupons" },
-  { href: "/terms", label: "Terms" },
+  { href: "/amazon-special", label: "Amazon Special" },
+  { href: "/suggest-a-book", label: "Suggest a Book" },
   { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms" },
   { href: "/refund-policy", label: "Refund Policy" }
 ];
 
 const mobileLinks = [
   ...mainLinks,
-  { href: "/story", label: "Our Story" },
-  { href: "/#about", label: "About" },
-  { href: "/contact", label: "Contact" }
+  ...moreLinks
 ];
 const searchableProducts = getLocalProducts();
 
@@ -92,7 +92,7 @@ function SearchDropdown({ query, results, onSelect }) {
     <div className={styles.searchDropdown} onMouseDown={(event) => event.preventDefault()}>
       {hasQuery && results.length > 0 ? (
         results.map((product) => {
-          const href = (product.audience || "regular") === "kids" ? "/kids#kids-books" : `/products/${product.id}`;
+          const href = productDetailHref(product);
 
           return (
           <Link
@@ -221,13 +221,13 @@ export default function Navbar() {
 
     if (searchResults[0]) {
       const firstResult = searchResults[0];
-      router.push((firstResult.audience || "regular") === "kids" ? "/kids#kids-books" : `/products/${firstResult.id}`);
+      router.push(productDetailHref(firstResult));
       closeMenus();
       return;
     }
 
     if (searchQuery.trim()) {
-      router.push(isKidsRoute ? "/kids#kids-books" : "/products");
+      router.push(isKidsRoute ? "/kids/books" : "/products");
       closeMenus();
     }
   }
@@ -319,9 +319,6 @@ export default function Navbar() {
             placeholder={isKidsRoute ? "Search kids books..." : "Search handbooks..."}
             icon={isKidsRoute ? "star" : "search"}
           />
-          <Link href={isKidsRoute ? "/kids#kids-books" : "/products"} className={styles.cta}>
-            {isKidsRoute ? "Browse Kids Books" : "Browse Handbooks"}
-          </Link>
         </div>
 
         <button
@@ -401,9 +398,6 @@ export default function Navbar() {
           </nav>
 
           <div className={styles.mobileActions}>
-            <Link href={isKidsRoute ? "/kids#kids-books" : "/products"} className="brutalButton" onClick={closeMenus}>
-              {isKidsRoute ? "Browse Kids Books" : "Browse Handbooks"}
-            </Link>
             <Link
               href={site.gumroadStore}
               className={styles.gumroadMobile}

@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import JsonLd from "@/components/JsonLd";
+import PageEntrance from "@/components/PageEntrance";
 import { getKidsProductsResult } from "@/lib/gumroad";
+import { getFeaturedKidsProducts } from "@/lib/productCollections";
 import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import styles from "./KidsPage.module.css";
@@ -70,8 +72,6 @@ const ageGroups = [
   ["Ages 12-14", "Python basics, projects, problem solving"]
 ];
 
-const kidsSampleHref = "/downloads/LearnStack_Kids_Free_Sample_PDF_READY_TO_UPLOAD.pdf";
-
 const faqs = [
   {
     q: "Are these books beginner-friendly?",
@@ -110,6 +110,7 @@ const faqJsonLd = {
 
 export default async function KidsPage() {
   const { products, error } = await getKidsProductsResult();
+  const featuredProducts = getFeaturedKidsProducts(products, 4);
 
   return (
     <>
@@ -148,7 +149,7 @@ export default async function KidsPage() {
         </div>
       </div>
 
-      <div className={styles.kidsPage}>
+      <PageEntrance variant="kidsFloat" className={styles.kidsPage} stagger>
         <section className={styles.hero}>
           <div className={styles.decorLayer} aria-hidden="true">
             <span className={styles.cloudOne} />
@@ -167,7 +168,7 @@ export default async function KidsPage() {
                 guided by parents.
               </p>
               <div className={styles.heroActions}>
-                <Link href="#kids-books" className="brutalButton">Explore Kids Books</Link>
+                <Link href="/kids/books" className="brutalButton">View All Kids Books</Link>
                 <Link href="/products" className="brutalButton brutalButtonWhite">View Regular Handbooks</Link>
               </div>
               <div className={styles.heroBadges} aria-label="Kids book qualities">
@@ -207,16 +208,15 @@ export default async function KidsPage() {
         <section className={styles.sampleSection} aria-labelledby="kids-sample-heading">
           <div className={`container ${styles.sampleCard}`}>
             <div>
-              <span className={styles.eyebrow}>Free Kids Sample</span>
-              <h2 id="kids-sample-heading">Download a colourful LearnStack Kids sample.</h2>
+              <span className={styles.eyebrow}>Kids Sample Preview</span>
+              <h2 id="kids-sample-heading">Preview selected kids books before buying.</h2>
               <p>
-                Preview computer basics, coding logic, activities, worksheet pages, and parent-friendly learning
-                structure before choosing a complete kids book.
+                Free sample PDFs are available for selected kids books, with more previews added regularly.
               </p>
             </div>
-            <a href={kidsSampleHref} className="brutalButton" download>
-              Download Kids Free Sample PDF
-            </a>
+            <Link href="/free-samples" className="brutalButton">
+              View Free Samples
+            </Link>
           </div>
         </section>
 
@@ -293,12 +293,14 @@ export default async function KidsPage() {
         <section id="kids-books" className={styles.booksSection} aria-labelledby="kids-books-heading">
           <div className="container">
             <div className={styles.sectionHeader}>
-              <span className={styles.eyebrow}>Kids books catalog</span>
-              <h2 id="kids-books-heading">Kids books only.</h2>
+              <span className={styles.eyebrow}>Featured Kids Books</span>
+              <h2 id="kids-books-heading">Start with these kids books.</h2>
               <p>
-                Regular programming handbooks stay in the main catalog. This page lists only LearnStack kids resources,
-                with Gumroad buy buttons for each PDF.
+                A short, focused set of LearnStack Kids books for the landing page. The complete kids catalog lives on a dedicated page.
               </p>
+              <Link href="/kids/books" className="brutalButton">
+                View All Kids Books
+              </Link>
             </div>
 
             {error ? (
@@ -306,14 +308,15 @@ export default async function KidsPage() {
                 <h3>Unable to load kids books right now.</h3>
                 <p>Please try again later.</p>
               </div>
-            ) : products.length > 0 ? (
+            ) : featuredProducts.length > 0 ? (
               <div className={styles.productGrid}>
-                {products.map((product, index) => (
+                {featuredProducts.map((product, index) => (
                   <ProductCard
                     key={product.id}
                     product={product}
                     priority={index < 2}
                     buyLabel="Buy on Gumroad"
+                    showSample
                   />
                 ))}
               </div>
@@ -323,6 +326,21 @@ export default async function KidsPage() {
                 <p>Please check that Gumroad kids product URLs contain learnstackkids.</p>
               </div>
             )}
+          </div>
+        </section>
+
+        <section className={styles.suggestSection} aria-labelledby="kids-suggest-heading">
+          <div className={`container ${styles.suggestCard}`}>
+            <div>
+              <span className={styles.eyebrow}>Suggest a Kids Book</span>
+              <h2 id="kids-suggest-heading">Want us to create a new kids book?</h2>
+              <p>
+                Parents, teachers, and readers can suggest new LearnStack Kids books, activity books, moral stories, curiosity topics, emotional learning books, or family learning ideas.
+              </p>
+            </div>
+            <Link href="/suggest-a-book" className="brutalButton">
+              Suggest a Kids Book
+            </Link>
           </div>
         </section>
 
@@ -389,10 +407,10 @@ export default async function KidsPage() {
             <h2 id="final-cta-heading">
               Start your child's learning journey with colourful, simple, and practical books.
             </h2>
-            <Link href="#kids-books" className="brutalButton">Browse Kids Books</Link>
+            <Link href="/kids/books" className="brutalButton">View All Kids Books</Link>
           </div>
         </section>
-      </div>
+      </PageEntrance>
     </>
   );
 }

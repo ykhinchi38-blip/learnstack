@@ -6,6 +6,9 @@ export const dynamic = "force-dynamic";
 
 function normalizeAudienceParam(value) {
   if (value === "kids") return "kids";
+  if (value === "life-career") return "life-career";
+  if (value === "business") return "business";
+  if (value === "uncategorized") return "uncategorized";
   if (value === "all") return "all";
   return "regular";
 }

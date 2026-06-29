@@ -17,7 +17,7 @@ const products = [
     topics: ["Syntax", "Functions", "OOP", "Projects", "Interview Prep"],
     description: "A practical Python handbook for CSE students and self-learners who want clear explanations, useful examples, and revision-friendly notes. It covers the fundamentals and helps you move toward projects and interviews with confidence.",
     pages: "120+",
-    badge: "Bestseller",
+    badge: "Python",
     chapters: [
       { title: "Python Foundations", topics: 8 },
       { title: "Control Flow & Functions", topics: 7 },

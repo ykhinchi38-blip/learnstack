@@ -19,7 +19,7 @@ export default function GlobalError({ error, reset }) {
               <button type="button" onClick={reset}>Try Again</button>
               <a href="/">Go Home</a>
             </div>
-            <small>If this keeps happening, contact us at support@learnstack.in</small>
+            <small>If this keeps happening, contact us at learnstacksupport@gmail.com</small>
           </div>
         </section>
         <style jsx>{`

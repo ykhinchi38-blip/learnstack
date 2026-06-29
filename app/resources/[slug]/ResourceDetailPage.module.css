@@ -1,0 +1,201 @@
+.hero {
+  padding: 52px 0 34px;
+  border-bottom: var(--border);
+  background:
+    linear-gradient(135deg, rgba(45, 107, 228, 0.12) 0 32%, transparent 32% 100%),
+    var(--off-white);
+}
+
+.hero h1 {
+  max-width: 980px;
+  margin: 14px 0;
+  color: var(--navy);
+}
+
+.intro {
+  max-width: 820px;
+  color: rgba(13, 27, 62, 0.78);
+  font-size: clamp(1.08rem, 1.6vw, 1.22rem);
+  font-weight: 900;
+  line-height: 1.72;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.meta span {
+  border: 2px solid var(--navy);
+  background: var(--white);
+  box-shadow: 2px 2px 0 var(--blue);
+  padding: 5px 9px;
+  color: var(--navy);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(280px, 0.28fr);
+  gap: clamp(24px, 5vw, 48px);
+  padding: var(--section-pad) 0;
+}
+
+.article {
+  display: grid;
+  gap: clamp(30px, 4vw, 42px);
+  min-width: 0;
+}
+
+.toc,
+.section,
+.checklistBlock,
+.faqBlock,
+.trustCard,
+.ctaCard {
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 5px 5px 0 var(--blue);
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.toc {
+  display: grid;
+  gap: 8px;
+}
+
+.toc a {
+  color: var(--navy);
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.section h2,
+.checklistBlock h2,
+.faqBlock h2,
+.sidebar h2 {
+  margin-bottom: 14px;
+  color: var(--navy);
+  line-height: 1.02;
+}
+
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.checklistBlock {
+  display: grid;
+  gap: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 211, 77, 0.26) 0 34%, transparent 34% 100%),
+    var(--white);
+}
+
+.checklistBlock ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklistBlock li {
+  border-top: 2px solid rgba(13, 27, 62, 0.16);
+  padding-top: 10px;
+  color: rgba(13, 27, 62, 0.78);
+  font-weight: 900;
+  line-height: 1.55;
+}
+
+.section p {
+  color: rgba(13, 27, 62, 0.78);
+  font-size: clamp(1rem, 1.35vw, 1.08rem);
+  font-weight: 800;
+  line-height: 1.78;
+}
+
+.faqGrid,
+.sideList {
+  display: grid;
+  gap: 12px;
+}
+
+.faqItem,
+.sideItem {
+  border-top: 2px solid rgba(13, 27, 62, 0.16);
+  padding-top: 12px;
+}
+
+.faqItem h3,
+.sideItem strong {
+  display: block;
+  color: var(--navy);
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.16rem;
+  line-height: 1.1;
+}
+
+.faqItem p,
+.sideItem p,
+.trustCard p,
+.ctaCard p {
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.62;
+}
+
+.sidebar {
+  position: sticky;
+  top: 130px;
+  display: grid;
+  align-self: start;
+  gap: 20px;
+}
+
+.sideItem {
+  display: grid;
+  gap: 6px;
+}
+
+.sideItem a,
+.ctaCard a,
+.trustCard a {
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid var(--navy);
+  background: var(--white);
+  box-shadow: 2px 2px 0 var(--blue);
+  padding: 6px 9px;
+  color: var(--navy);
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.ctaCard {
+  display: grid;
+  gap: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 211, 77, 0.28) 0 34%, transparent 34% 100%),
+    var(--white);
+}
+
+.updated {
+  color: rgba(13, 27, 62, 0.68);
+  font-weight: 900;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+}

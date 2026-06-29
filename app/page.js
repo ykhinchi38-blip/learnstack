@@ -5,7 +5,12 @@ import SubscriberDiscount from "@/components/SubscriberDiscount";
 import CurrentOffers from "@/components/CurrentOffers";
 import Icon from "@/components/Icon";
 import JsonLd from "@/components/JsonLd";
-import { getKidsProducts, getRegularProducts } from "@/lib/gumroad";
+import PageEntrance from "@/components/PageEntrance";
+import { brand, bookMakingProcess } from "@/data/brand";
+import { getFeaturedResources } from "@/data/resources";
+import { getAllProducts, getKidsProducts, getLifeCareerProducts, getRegularProducts } from "@/lib/gumroad";
+import { productDetailHref } from "@/lib/productRouting";
+import { getPublicSamples } from "@/lib/sampleMatching";
 import { createMetadata, breadcrumbJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import styles from "./HomePage.module.css";
 
@@ -13,15 +18,16 @@ export const revalidate = 300;
 
 export const metadata = createMetadata({
   title: "Premium PDF Handbooks for Students, Developers & Kids",
-  description: "Explore LearnStack digital handbooks for CSE students, developers, coding beginners, and kids learning books. Get demo previews, instant access, and practical learning PDFs.",
+  description: "Explore LearnStack digital handbooks, Life & Career Playbooks, and kids learning books with Gumroad PDF delivery and honest sample-preview updates.",
   path: "/"
 });
 
-const stats = [
-  ["500+", "Students"],
-  ["10+", "Handbooks"],
-  ["Clean", "Learning Experience"],
-  ["Instant", "PDF Delivery"]
+const trustCards = [
+  ["Direct PDF delivery", "Digital editions are delivered through Gumroad email after purchase.", "file"],
+  ["Free samples available", "Selected LearnStack books include free preview PDFs.", "book"],
+  ["Built by LearnStack", "A founder-led learning brand with a clear learning-first point of view.", "shield"],
+  ["Support within 24-48 hours", `Email ${brand.contactEmail} if you need buyer support.`, "bolt"],
+  ["Download issue help", "If your file does not download properly, contact us within 3 days.", "graph"]
 ];
 
 const features = [
@@ -34,23 +40,45 @@ const features = [
 ];
 
 const purchaseInfo = [
-  ["Preview before buying", "Use free samples and previews to understand the layout, depth, and reading style first.", "book"],
-  ["Secure checkout", "Purchases happen through Gumroad, with receipt and download access sent to your email.", "shield"],
+  ["Preview before buying", "Selected books include free sample PDFs so you can explore the style first.", "book"],
+  ["Secure Gumroad delivery", "Purchases happen through Gumroad, with receipt and download access sent to your email.", "shield"],
   ["Read anywhere", "Downloadable PDFs work on phones, tablets, laptops, and PDF reader apps.", "file"],
-  ["Support when needed", "If delivery or access fails, contact support with your Gumroad order email.", "bolt"]
+  ["Support when needed", `${brand.supportResponseTime} If delivery or access fails, contact support with your Gumroad order email.`, "bolt"]
 ];
 
-const kidsFeatures = ["Moral stories", "Curiosity questions", "Fun learning", "Demo available", "Digital access"];
+const kidsFeatures = ["Moral stories", "Curiosity questions", "Fun learning", "Free samples", "Digital access"];
 
-const feedbackCards = [
-  ["Aarav Sharma", "CSE Student", "The layout makes revision much faster. The notes are clean, structured, and easy to read before exams."],
-  ["Priya Mehta", "Beginner Programmer", "Clean examples, no unnecessary confusion. I can quickly understand what to learn and revise next."],
-  ["Rohan Verma", "Web Development Learner", "Good for quick learning before projects. The examples and mistakes section feel very useful."],
-  ["Sneha Kapoor", "College Student", "The handbook format keeps everything organized. It is much easier to revise important points in less time."],
-  ["Kabir Singh", "Developer Learner", "LearnStack focuses on practical learning instead of only theory, which makes the content more helpful."]
+const pathCards = [
+  {
+    title: "Student Handbooks",
+    copy: "Coding, tools, AI, career, and practical student learning.",
+    href: "/handbooks",
+    cta: "Browse Handbooks"
+  },
+  {
+    title: "Kids Books",
+    copy: "Story-based books for curiosity, emotions, values, family learning, and early education.",
+    href: "/kids",
+    cta: "Browse Kids Books"
+  },
+  {
+    title: "Life & Career Playbooks",
+    copy: "Communication, confidence, independence, personal branding, presentation skills, side hustles, and practical life skills.",
+    href: "/life-career",
+    cta: "Browse Life & Career"
+  }
 ];
 
-const physicalBooksMessage = "Coming Soon: LearnStack Physical Books - premium handbooks you can hold, highlight, and revise anywhere.";
+const homepageFaqs = [
+  ["What is LearnStack?", "LearnStack is a learning brand that creates practical PDF handbooks for students and developers, plus warm LearnStack Kids books for children, parents, teachers, and families."],
+  ["Are the books digital or physical?", "Digital PDF edition available on LearnStack through Gumroad. Paperback edition available on Amazon where available."],
+  ["Can I preview before buying?", "Yes. Selected Gumroad books now include free PDF samples, and more previews will be added as books are prepared."],
+  ["Are kids books safe for children?", "LearnStack Kids books use simple, parent-friendly language and are designed for guided, safe learning."],
+  ["Are the coding books beginner-friendly?", "Yes. Most handbooks start with clear basics, then move into examples, practice, revision, and interview-ready ideas."],
+  ["Where do I download after purchase?", "Gumroad sends the receipt and download link to the email used during checkout."],
+  ["Are Amazon paperback editions available?", "Paperback editions are shown only where available. LearnStack does not claim Amazon prices or availability unless a link exists."],
+  ["How do I contact support?", `Email ${brand.contactEmail} with your order email and the book name if you need help.`]
+];
 
 function createSeededRandom(seed) {
   let state = 0;
@@ -205,13 +233,20 @@ function BookshelfIllustration() {
 }
 
 export default async function HomePage() {
-  const products = await getRegularProducts();
-  const kidsProducts = await getKidsProducts();
+  const [products, kidsProducts, lifeCareerProducts, allProducts] = await Promise.all([
+    getRegularProducts(),
+    getKidsProducts(),
+    getLifeCareerProducts(),
+    getAllProducts()
+  ]);
   const featured = products.slice(0, 3);
   const kidsPreview = kidsProducts.slice(0, 3);
+  const lifeCareerPreview = lifeCareerProducts.slice(0, 3);
+  const homepageSamples = getPublicSamples(allProducts).slice(0, 6);
+  const featuredResources = getFeaturedResources(6);
 
   return (
-    <>
+    <PageEntrance variant="revealHero" stagger>
       <JsonLd data={organizationJsonLd()} />
       <JsonLd data={websiteJsonLd()} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }])} />
@@ -219,14 +254,17 @@ export default async function HomePage() {
       <section className={styles.hero}>
         <div className={`container ${styles.heroInner}`}>
           <div className={styles.heroCopy}>
-            <span className={`tag ${styles.heroBadge}`}>Premium learning PDFs</span>
-            <h1>Stop collecting notes. Start building <span className={styles.underlinedWord}>skills.</span></h1>
+            <span className={`tag ${styles.heroBadge}`}>Learn. Build. Grow.</span>
+            <h1>Premium Learning Books for Students, Kids, and Curious Minds</h1>
             <p>
-              LearnStack creates practical PDF handbooks for CSE students and developers who want to learn, revise, build, and grow with confidence.
+              LearnStack creates practical PDF handbooks, kids learning books, and story-based resources designed to make learning clear, useful, and enjoyable.
             </p>
             <div className={styles.heroActions}>
-              <Link href="/products" className="brutalButton">Browse Handbooks</Link>
-              <Link href="/free-resources" className={styles.secondaryButton}>Free Sample &rarr;</Link>
+              <Link href="/products" className="brutalButton">Explore Handbooks</Link>
+              <Link href="/kids" className="brutalButton brutalButtonWhite">Explore Kids Books</Link>
+              <Link href="/life-career" className={styles.secondaryButton}>Life & Career</Link>
+              <Link href="/free-samples" className={styles.secondaryButton}>View Free Samples</Link>
+              <Link href="/resources" className={styles.secondaryButton}>Read Resources</Link>
             </div>
           </div>
 
@@ -237,23 +275,13 @@ export default async function HomePage() {
         <div className={styles.heroStripe} />
       </section>
 
-      <section className={styles.physicalBooksBanner} aria-label="Physical books announcement">
-        <div className={styles.marqueeTrack}>
-          {[0, 1, 2].map((item) => (
-            <span key={item}>
-              <span className={styles.bookIcon} aria-hidden="true" />
-              {physicalBooksMessage}
-            </span>
-          ))}
-        </div>
-      </section>
-
       <section className={styles.statsStrip}>
         <div className={`container ${styles.statsGrid}`}>
-          {stats.map(([number, label]) => (
-            <div key={label} className={styles.statItem}>
-              <strong>{number}</strong>
-              <span>{label}</span>
+          {trustCards.map(([title, copy, icon]) => (
+            <div key={title} className={styles.trustCard}>
+              <Icon name={icon} />
+              <strong>{title}</strong>
+              <span>{copy}</span>
             </div>
           ))}
         </div>
@@ -261,14 +289,98 @@ export default async function HomePage() {
 
       <CurrentOffers />
 
+      <section className={styles.pathSection} aria-labelledby="learning-path-heading">
+        <div className="container">
+          <div className={styles.sectionHeaderLeft}>
+            <span className="tag">Choose Your Learning Path</span>
+            <h2 id="learning-path-heading">Two ways to begin with LearnStack.</h2>
+          </div>
+          <div className={styles.pathGrid}>
+            {pathCards.map((card) => (
+              <article className={styles.pathCard} key={card.title}>
+                <h3>{card.title}</h3>
+                <p>{card.copy}</p>
+                <Link href={card.href} className="brutalButton">{card.cta}</Link>
+              </article>
+            ))}
+          </div>
+          {lifeCareerPreview.length > 0 && (
+            <div className={styles.lifeCareerPreview}>
+              <span className="tag">New Playbooks</span>
+              <div>
+                {lifeCareerPreview.map((product) => (
+                  <Link key={product.id} href={productDetailHref(product)}>
+                    {product.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className={styles.samplesSection} aria-labelledby="samples-heading">
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <div>
+              <span className="tag">Preview Before You Buy</span>
+              <h2 id="samples-heading">Preview before you buy</h2>
+              <p>
+                Open free sample PDFs for selected LearnStack books and explore the style before purchasing.
+              </p>
+            </div>
+            <Link href="/free-samples" className={styles.underlineLink}>All Free Samples</Link>
+          </div>
+          {homepageSamples.length ? (
+            <div className={styles.sampleGroups}>
+              {homepageSamples.map(({ product, sample }) => (
+                <article className={styles.sampleGroup} key={`${sample.sourceSlug}-${product.id}`}>
+                  <h3>{product.title}</h3>
+                  <div className={styles.sampleRow}>
+                    <span>{sample.samplePageCount ? `${sample.samplePageCount} preview pages` : "Free PDF sample"}</span>
+                    <a href={sample.sampleUrl} target="_blank" rel="noopener noreferrer">View Free Sample</a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <article className={styles.sampleGroup}>
+              <h3>Sample previews are being added.</h3>
+              <p>Free sample PDFs will appear here after they are linked to live Gumroad products.</p>
+            </article>
+          )}
+        </div>
+      </section>
+
+      <section className={styles.resourcesSection} aria-labelledby="resources-heading">
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <div>
+              <span className="tag">Resources</span>
+              <h2 id="resources-heading">Helpful guides before you buy.</h2>
+            </div>
+            <Link href="/resources" className={styles.underlineLink}>All Resources</Link>
+          </div>
+          <div className={styles.resourceGrid}>
+            {featuredResources.map((resource) => (
+              <Link href={`/resources/${resource.slug}`} className={styles.resourceCard} key={resource.slug}>
+                <span>{resource.category}</span>
+                <h3>{resource.title}</h3>
+                <p>{resource.description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className={styles.featuredSection}>
         <div className="container">
           <div className={styles.sectionHeader}>
             <div>
-              <span className="tag">Catalog</span>
-              <h2>The Handbooks.</h2>
+              <span className="tag">Popular Student Handbooks</span>
+              <h2>Practical books for coding, tools, and revision.</h2>
             </div>
-            <Link href="/products" className={styles.underlineLink}>All Handbooks &rarr;</Link>
+            <Link href="/products" className={styles.underlineLink}>All Handbooks</Link>
           </div>
           <div className={styles.featuredGrid}>
             {featured.map((product, index) => (
@@ -278,20 +390,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className={styles.discountSection}>
-        <div className="container">
-          <SubscriberDiscount />
-        </div>
-      </section>
-
       <section className={styles.kidsDiscoverySection} aria-labelledby="homepage-kids-heading">
         <div className={`container ${styles.kidsDiscoveryGrid}`}>
           <div className={styles.kidsDiscoveryCopy}>
-            <span className={styles.kidsLabel}>LEARNSTACK KIDS</span>
-            <h2 id="homepage-kids-heading">Fun Learning Books for Curious Minds</h2>
+            <span className={styles.kidsLabel}>Popular Kids Books</span>
+            <h2 id="homepage-kids-heading">Warm books for curious children and guiding adults.</h2>
             <p>
-              Explore colorful kids books with moral stories, curiosity-building questions, simple activities, and smart
-              learning ideas made for young readers.
+              Explore colorful kids books with moral stories, curiosity-building questions, simple activities, and safe learning ideas made for young readers.
             </p>
             <div className={styles.kidsChips} aria-label="LearnStack Kids book features">
               {kidsFeatures.map((feature) => (
@@ -300,7 +405,7 @@ export default async function HomePage() {
             </div>
             <div className={styles.kidsActions}>
               <Link href="/kids" className="brutalButton">Explore Kids Books</Link>
-              <Link href="/free-resources" className={styles.kidsSecondaryButton}>View Free Samples</Link>
+              <Link href="/free-samples" className={styles.kidsSecondaryButton}>View Free Samples</Link>
             </div>
           </div>
 
@@ -352,20 +457,29 @@ export default async function HomePage() {
                   <small>Rs. 149</small>
                 </Link>
               ))}
-            </div>
+              </div>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.discountSection}>
+        <div className="container">
+          <SubscriberDiscount />
         </div>
       </section>
 
       <section id="about" className={styles.storyTeaser}>
         <div className={`container ${styles.storyTeaserInner}`}>
           <div className={styles.storyTeaserCopy}>
-            <span className="tag">ABOUT LEARNSTACK</span>
-            <h2>Built by a student, for every student.</h2>
+            <span className="tag">Built by Yogesh Khinchi</span>
+            <h2>Clear notes, practical learning, and child-friendly explanations.</h2>
             <p>
-              LearnStack began with a simple habit: making clear, structured notes that helped students learn better. Today, that habit has grown into practical handbooks for learners everywhere.
+              LearnStack was started by Yogesh Khinchi to turn clear notes, practical learning, and child-friendly explanations into useful digital books. The goal is simple: make learning easier to start, easier to understand, and easier to continue.
             </p>
-            <Link href="/story" className={styles.storyButton}>Read Our Story</Link>
+            <div className={styles.founderActions}>
+              <Link href="/story" className={styles.storyButton}>Read Our Story</Link>
+              <Link href="/free-samples" className={styles.secondaryButton}>Free Samples</Link>
+            </div>
           </div>
         </div>
       </section>
@@ -378,16 +492,19 @@ export default async function HomePage() {
             <Image src="/images/previews/preview-placeholder-3.png" alt="PDF preview page" width={300} height={400} />
           </div>
           <div>
-            <span className="tag">Inside every handbook</span>
-            <h2>Designed like a study system.</h2>
-            <ul className={styles.checkList}>
-              <li>Beginner-friendly explanations without unnecessary complexity.</li>
-              <li>Practical examples, mini projects, and revision notes.</li>
-              <li>Topic-based structure so you always know what to learn next.</li>
-              <li>Interview-focused sections for important concepts.</li>
-              <li>Clean layout built for mobile, tablet, and laptop reading.</li>
-              <li>Instant PDF delivery through Gumroad after purchase.</li>
-            </ul>
+            <span className="tag">How books are made</span>
+            <h2>Research, write, design, review, and publish.</h2>
+            <p className={styles.processIntro}>
+              LearnStack books are designed to feel less like boring textbooks and more like guided learning experiences.
+            </p>
+            <div className={styles.processGrid}>
+              {bookMakingProcess.map((step, index) => (
+                <article className={styles.processCard} key={step}>
+                  <span>{index + 1}</span>
+                  <strong>{step}</strong>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -399,7 +516,7 @@ export default async function HomePage() {
               <span className="tag">Before you buy</span>
               <h2>Clear delivery, readable PDFs, and simple support.</h2>
             </div>
-            <Link href="/refund-policy" className={styles.underlineLink}>Read Policies &rarr;</Link>
+            <Link href="/help" className={styles.underlineLink}>Get Help &rarr;</Link>
           </div>
           <div className={styles.purchaseGrid}>
             {purchaseInfo.map(([title, copy, icon]) => (
@@ -431,56 +548,22 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className={styles.testimonialsSection}>
+      <section className={styles.faqSection} aria-labelledby="homepage-faq-heading">
         <div className="container">
-          <div className={styles.feedbackHeader}>
-            <span className="tag">Learner Feedback</span>
-            <h2>Student feedback from LearnStack readers.</h2>
-            <p>Students use LearnStack-style notes to revise faster, understand clearly, and stay organized.</p>
+          <div className={styles.sectionHeaderLeft}>
+            <span className="tag">FAQ</span>
+            <h2 id="homepage-faq-heading">Buyer questions, answered before checkout.</h2>
           </div>
-          <div className={styles.testimonialGrid}>
-            {feedbackCards.map(([name, role, quote]) => (
-              <article key={name} className={styles.testimonialCard}>
-                <span className={styles.quoteMark} aria-hidden="true">&ldquo;</span>
-                <p>{quote}</p>
-                <strong>{name}</strong>
-                <small>{role}</small>
+          <div className={styles.faqGrid}>
+            {homepageFaqs.map(([question, answer]) => (
+              <article className={styles.faqCard} key={question}>
+                <h3>{question}</h3>
+                <p>{answer}</p>
               </article>
             ))}
           </div>
-          <Link href="/products" className={styles.feedbackButton}>Explore Handbooks</Link>
         </div>
       </section>
-
-      <section className={styles.sampleBanner}>
-        <div className="container">
-          <h2>Read before you buy.</h2>
-          <p>Start with a free sample chapter and see how LearnStack handbooks are structured.</p>
-          <Link href="/free-resources" className="brutalButton">Browse Free Samples</Link>
-        </div>
-      </section>
-
-      <section className={styles.newsletterSection}>
-        <div className={`container ${styles.newsletterBox}`}>
-          <div className={styles.newsletterCopy}>
-            <span className="tag">NEW DROPS</span>
-            <h2>Get notified when a new handbook launches.</h2>
-            <p>No spam. Only new handbook drops, free samples, student offers, and LearnStack updates.</p>
-          </div>
-          <div className={styles.newsletterAction}>
-            <form className={styles.newsletterForm} action="#" method="POST">
-              <label className="visuallyHidden" htmlFor="homepage-newsletter-email">Email address</label>
-              <input id="homepage-newsletter-email" type="email" name="email" placeholder="you@example.com" required />
-              <button className="brutalButton" type="submit">Notify Me</button>
-            </form>
-            <div className={styles.newsletterTrust} aria-label="Newsletter benefits">
-              <span>Free samples</span>
-              <span>Student offers</span>
-              <span>New handbook alerts</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+    </PageEntrance>
   );
 }

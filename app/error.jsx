@@ -25,7 +25,7 @@ export default function ErrorPage({ error, reset }) {
           <button type="button" onClick={reset}>Try Again</button>
           <Link href="/">Go Home</Link>
         </div>
-        <small>If this keeps happening, contact us at support@learnstack.in</small>
+        <small>If this keeps happening, contact us at learnstacksupport@gmail.com</small>
       </div>
       <style jsx>{`
         .errorPage {

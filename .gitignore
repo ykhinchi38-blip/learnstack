@@ -1,19 +1,29 @@
 # Dependencies
-node_modules
+node_modules/
 
 # Next.js build output
-.next
-out
+.next/
+out/
 
 # Environment variables
 .env
 .env.local
-.env*.local
+.env.*.local
 .env.production
 .env.production.local
 
+# Private PDF/sample generation inputs and output
+temp-samples/
+tmp/
+.cache/
+*.tmp.pdf
+*.full.pdf
+private/
+paid-books/
+full-pdfs/
+
 # Vercel
-.vercel
+.vercel/
 
 # System files
 .DS_Store
@@ -21,11 +31,18 @@ Thumbs.db
 
 # Logs
 *.log
+*.err.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .next-start*.log
+next-dev*.log
+dev-server*.log
+server*.log
+product-detail-start*.log
+start-*.log
+.samples-*.log
 
 # Optional local files
 *.pem

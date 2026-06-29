@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import ProductDetailView from "@/components/ProductDetailView";
 import JsonLd from "@/components/JsonLd";
+import PageEntrance from "@/components/PageEntrance";
+import { getResourceBySlug } from "@/data/resources";
 import { getRegularProductBySlug, getRegularProducts } from "@/lib/gumroad";
 import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
 
@@ -43,9 +45,14 @@ export default async function ProductDetailPage({ params }) {
   const relatedProducts = products
     .filter((item) => item.id !== product.id && item.category === product.category)
     .slice(0, 3);
+  const relatedResources = [
+    "best-pdf-handbooks-for-cse-students",
+    "best-coding-books-for-beginners-2026",
+    "how-to-start-coding-as-a-student"
+  ].map(getResourceBySlug).filter(Boolean);
 
   return (
-    <>
+    <PageEntrance variant="fadeScale">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd data={breadcrumbJsonLd([
         { name: "Home", href: "/" },
@@ -59,7 +66,8 @@ export default async function ProductDetailPage({ params }) {
         catalogLabel="Handbooks"
         eyebrow="LearnStack Handbook"
         relatedProducts={relatedProducts}
+        relatedResources={relatedResources}
       />
-    </>
+    </PageEntrance>
   );
 }

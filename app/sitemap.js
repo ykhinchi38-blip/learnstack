@@ -1,29 +1,39 @@
-import { getKidsProducts, getRegularProducts } from "@/lib/gumroad";
+import { getKidsProducts, getLifeCareerProducts, getRegularProducts } from "@/lib/gumroad";
 import { absoluteUrl } from "@/lib/seo";
 import localProducts, { slugify } from "@/data/products";
+import { resources } from "@/data/resources";
 
 export const revalidate = 300;
 
 export default async function sitemap() {
   const liveProducts = await getRegularProducts();
   const liveKidsProducts = await getKidsProducts();
+  const liveLifeCareerProducts = await getLifeCareerProducts();
   const localRegularProducts = localProducts.filter((product) => (product.audience || "regular") === "regular");
   const localKidsProducts = localProducts.filter((product) => product.audience === "kids");
+  const localLifeCareerProducts = localProducts.filter((product) => product.audience === "life-career");
   const products = [...liveProducts, ...localRegularProducts];
   const kidsProducts = [...liveKidsProducts, ...localKidsProducts];
+  const lifeCareerProducts = [...liveLifeCareerProducts, ...localLifeCareerProducts];
   const now = new Date();
 
   const staticRoutes = [
     "/",
     "/products",
+    "/life-career",
     "/kids",
+    "/kids/books",
+    "/resources",
+    "/free-samples",
     "/story",
+    "/suggest-a-book",
+    "/why-learnstack",
+    "/help",
+    "/amazon-special",
     "/categories",
     "/bundles",
     "/learning-paths",
-    "/free-resources",
     "/coupons",
-    "/reviews",
     "/about",
     "/contact",
     "/privacy-policy",
@@ -44,16 +54,18 @@ export default async function sitemap() {
 
   const productRoutes = products.map((product) => makeRouteEntry(`/products/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
   const kidsProductRoutes = kidsProducts.map((product) => makeRouteEntry(`/kids/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
+  const lifeCareerProductRoutes = lifeCareerProducts.map((product) => makeRouteEntry(`/life-career/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
+  const resourceRoutes = resources.map((resource) => makeRouteEntry(`/resources/${resource.slug}`, resource.updatedAt || now)).filter(Boolean);
 
   const staticEntries = [...staticRoutes, ...categoryRoutes].map((route) => ({
     route,
     lastModified: now
   }));
 
-  return [...staticEntries, ...productRoutes, ...kidsProductRoutes].map(({ route, lastModified }) => ({
+  return [...staticEntries, ...productRoutes, ...kidsProductRoutes, ...lifeCareerProductRoutes, ...resourceRoutes].map(({ route, lastModified }) => ({
     url: absoluteUrl(route),
     lastModified,
-    changeFrequency: route.startsWith("/products") || route.startsWith("/kids/") ? "weekly" : "monthly",
-    priority: route === "/" ? 1 : route.startsWith("/products") || route.startsWith("/kids/") ? 0.8 : 0.6
+    changeFrequency: route.startsWith("/products") || route.startsWith("/kids/") || route.startsWith("/life-career/") ? "weekly" : "monthly",
+    priority: route === "/" ? 1 : route.startsWith("/products") || route.startsWith("/kids/") || route.startsWith("/life-career/") ? 0.8 : 0.6
   }));
 }

@@ -1,4 +1,5 @@
 import JsonLd from "@/components/JsonLd";
+import PageEntrance from "@/components/PageEntrance";
 import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import styles from "./PolicyPage.module.css";
 
@@ -10,7 +11,7 @@ export const metadata = createMetadata({
 
 export default function PolicyPage() {
   return (
-    <>
+    <PageEntrance variant="fadeUp">
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Refund Policy", href: "/refund-policy" }])} />
       <section className="pageHero">
         <div className="container">
@@ -43,6 +44,6 @@ export default function PolicyPage() {
           <p>Use the support email in the footer and include enough order information for us to find your purchase quickly.</p>
         </div>
       </section>
-    </>
+    </PageEntrance>
   );
 }

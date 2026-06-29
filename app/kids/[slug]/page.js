@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import ProductDetailView from "@/components/ProductDetailView";
 import JsonLd from "@/components/JsonLd";
+import PageEntrance from "@/components/PageEntrance";
+import { getResourceBySlug } from "@/data/resources";
 import { getKidsProductBySlug, getKidsProducts } from "@/lib/gumroad";
 import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
 
@@ -43,23 +45,29 @@ export default async function KidsProductDetailPage({ params }) {
   const relatedProducts = products
     .filter((item) => item.id !== product.id)
     .slice(0, 3);
+  const relatedResources = [
+    "best-kids-books-for-curious-children",
+    "best-moral-stories-for-kids-with-activities",
+    "how-to-teach-kids-big-feelings"
+  ].map(getResourceBySlug).filter(Boolean);
 
   return (
-    <>
+    <PageEntrance variant="fadeScale">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd data={breadcrumbJsonLd([
         { name: "Home", href: "/" },
-        { name: "Kids Books", href: "/kids" },
+        { name: "All Kids Books", href: "/kids/books" },
         { name: product.title, href: productPath }
       ])} />
 
       <ProductDetailView
         product={product}
-        catalogHref="/kids"
-        catalogLabel="Kids Books"
+        catalogHref="/kids/books"
+        catalogLabel="All Kids Books"
         eyebrow="LearnStack Kids Book"
         relatedProducts={relatedProducts}
+        relatedResources={relatedResources}
       />
-    </>
+    </PageEntrance>
   );
 }

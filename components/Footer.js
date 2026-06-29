@@ -12,7 +12,7 @@ export default function Footer() {
             <Image src={site.logo} alt="LearnStack logo" width={44} height={44} />
             <span>LearnStack</span>
           </Link>
-          <p>Premium PDF handbooks for students, developers, and curious kids.</p>
+          <p>Premium PDF handbooks, Life & Career Playbooks, and kids learning books.</p>
         </div>
 
         <div>
@@ -20,7 +20,10 @@ export default function Footer() {
           <ul>
             <li><Link href="/products">Handbooks</Link></li>
             <li><Link href="/kids">Kids Books</Link></li>
-            <li><Link href="/free-resources">Free Resources</Link></li>
+            <li><Link href="/kids/books">All Kids Books</Link></li>
+            <li><Link href="/life-career">Life & Career</Link></li>
+            <li><Link href="/resources">Resources</Link></li>
+            <li><Link href="/free-samples">Free Samples</Link></li>
             <li><Link href="/story">Our Story</Link></li>
           </ul>
         </div>
@@ -28,9 +31,12 @@ export default function Footer() {
         <div>
           <h3>Support</h3>
           <ul>
+            <li><Link href="/help">Help</Link></li>
+            <li><Link href="/why-learnstack">Why LearnStack</Link></li>
             <li><Link href="/contact">Contact</Link></li>
             <li><a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></li>
             <li><Link href={site.gumroadStore} target="_blank">Gumroad Store</Link></li>
+            <li><Link href="/suggest-a-book">Suggest a Book</Link></li>
           </ul>
         </div>
 

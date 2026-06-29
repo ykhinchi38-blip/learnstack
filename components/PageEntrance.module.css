@@ -1,0 +1,159 @@
+.shell {
+  --page-enter-distance: 18px;
+  --page-enter-scale: 0.985;
+  animation-duration: 640ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fadeUp {
+  animation-name: fadeUp;
+}
+
+.fadeScale {
+  animation-name: fadeScale;
+}
+
+.slideSoft {
+  animation-name: slideSoft;
+}
+
+.revealHero {
+  animation-name: revealHero;
+}
+
+.kidsFloat {
+  animation-name: kidsFloat;
+}
+
+.resourceFade {
+  animation-name: resourceFade;
+}
+
+.staggerCards {
+  animation-name: fadeUp;
+}
+
+.staggerCards :global(section),
+.revealHero :global(section),
+.kidsFloat :global(section),
+.resourceFade :global(section) {
+  animation: sectionIn 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.staggerCards :global(section:nth-of-type(2)),
+.revealHero :global(section:nth-of-type(2)),
+.kidsFloat :global(section:nth-of-type(2)),
+.resourceFade :global(section:nth-of-type(2)) {
+  animation-delay: 90ms;
+}
+
+.staggerCards :global(section:nth-of-type(3)),
+.revealHero :global(section:nth-of-type(3)),
+.kidsFloat :global(section:nth-of-type(3)),
+.resourceFade :global(section:nth-of-type(3)) {
+  animation-delay: 150ms;
+}
+
+.staggerCards :global(section:nth-of-type(n + 4)),
+.revealHero :global(section:nth-of-type(n + 4)),
+.kidsFloat :global(section:nth-of-type(n + 4)),
+.resourceFade :global(section:nth-of-type(n + 4)) {
+  animation-delay: 210ms;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(var(--page-enter-distance));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(var(--page-enter-scale));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideSoft {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealHero {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    clip-path: inset(0 0 12% 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0);
+  }
+}
+
+@keyframes kidsFloat {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes resourceFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell,
+  .shell :global(section) {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}

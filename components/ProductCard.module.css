@@ -69,6 +69,18 @@
   word-break: break-word;
 }
 
+.summary {
+  color: var(--text-secondary);
+  display: -webkit-box;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.45;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
 .metaRow {
   display: flex;
   align-items: flex-end;
@@ -120,6 +132,28 @@
   text-align: center;
   text-decoration: none;
   transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.sampleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: var(--border);
+  border-radius: var(--button-radius, 0);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--accent);
+  color: var(--black);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.sampleButton:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--accent);
 }
 
 .detailsButton:hover:not(:disabled) {

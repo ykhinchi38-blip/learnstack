@@ -1,82 +1,94 @@
+import Image from "next/image";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
-import Icon from "@/components/Icon";
-import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
-import { site } from "@/lib/site";
-import styles from "./AboutPage.module.css";
+import PageEntrance from "@/components/PageEntrance";
+import { brand, bookMakingProcess } from "@/data/brand";
+import { breadcrumbJsonLd, createMetadata, personJsonLd } from "@/lib/seo";
+import styles from "../BrandTrustPage.module.css";
 
 export const metadata = createMetadata({
   title: "About LearnStack",
-  description: "Learn about LearnStack, a student-focused brand creating premium educational PDF handbooks for CSE students and developers.",
+  description: "LearnStack creates visual, practical handbooks, Life & Career Playbooks, and warm learning books for kids. Learn about the brand, founder Yogesh Khinchi, sample status, and support.",
   path: "/about"
 });
 
 export default function AboutPage() {
-  const values = [
-    ["Clarity", "We explain concepts in a way that students can revise and apply."],
-    ["Practicality", "Every resource is made for projects, interviews, and real learning."],
-    ["Trust", "The website, products, and support flow are built like a serious brand."]
-  ];
-
   return (
-    <>
+    <PageEntrance variant="slideSoft" stagger>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "About", href: "/about" }])} />
+      <JsonLd data={personJsonLd()} />
+
       <section className="pageHero">
         <div className="container">
-          <span className="pageEyebrow">About</span>
-          <h1 className="pageTitle">LearnStack exists to make self-learning less messy.</h1>
+          <span className="pageEyebrow">About LearnStack</span>
+          <h1 className="pageTitle">Practical books for students. Warm books for kids.</h1>
           <p className="pageLead">
-            LearnStack is a premium PDF handbook brand for CSE students, developers, and self-learners who want clear, structured, and practical learning material.
+            LearnStack creates digital PDF handbooks, Life & Career Playbooks, kids learning books, and helpful resources for learners who want clear, simple, and useful explanations.
           </p>
         </div>
       </section>
 
-      <section className={styles.storySection}>
-        <div className={`container ${styles.storyGrid}`}>
-          <div className={styles.storyBlock}>
-            <span className="tag">Founder story</span>
-            <h2>Built from the student problem.</h2>
+      <section className={styles.section}>
+        <div className={`container ${styles.gridTwo}`}>
+          <article className={styles.highlight}>
+            <h2>What LearnStack is</h2>
             <p>
-              LearnStack began with a simple student habit: turning messy topics into clear, structured notes that are easier to revise, remember, and apply.
+              LearnStack is a founder-led learning brand with three clear branches: practical handbooks for students and developers, Life & Career Playbooks for personal growth, and warm learning books for kids and families.
             </p>
             <p>
-              Today, LearnStack focuses on clean explanations, practical chapters, revision-friendly formatting, and instant PDF access through Gumroad so learners can spend less time searching and more time building.
+              The goal is to make learning easier to start, easier to understand, and easier to continue through focused, visual, easy-to-follow books.
             </p>
-          </div>
-          <div className={styles.brandBlock}>
-            <strong>{site.tagline}</strong>
-            <span>Premium PDF handbooks for serious learners.</span>
-          </div>
+          </article>
+          <figure className={`${styles.card} ${styles.imageCard}`}>
+            <Image
+              src="/images/founder/yogesh-khinchi-visionary.png"
+              alt={`${brand.founder}, founder of LearnStack`}
+              width={720}
+              height={720}
+              priority
+            />
+            <h2>Founder</h2>
+            <p>{brand.founder}, {brand.founderTitle}, started LearnStack from the habit of making clear notes and turning learning into practical resources.</p>
+          </figure>
         </div>
       </section>
 
-      <section className={styles.valuesSection}>
-        <div className="container">
-          <h2>Our values.</h2>
-          <div className={styles.valuesGrid}>
-            {values.map(([title, copy]) => (
-              <article key={title} className={styles.valueCard}>
-                <Icon name="shield" />
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
+      <section className={styles.sectionAlt}>
+        <div className={`container ${styles.gridTwo}`}>
+          <article className={styles.highlight}>
+            <h2>LearnStack Handbooks</h2>
+            <p>Premium, practical PDF handbooks for coding, placements, developer tools, productivity, projects, and professional skills.</p>
+            <Link className="brutalButton" href="/products">Browse Handbooks</Link>
+          </article>
+          <article className={styles.highlight}>
+            <h2>LearnStack Kids</h2>
+            <p>Warm, colorful, parent-friendly books for curiosity, moral stories, computer basics, early coding, emotions, culture, and safe learning.</p>
+            <Link className="brutalButton" href="/kids">Browse Kids Books</Link>
+          </article>
+          <article className={styles.highlight}>
+            <h2>Life & Career Playbooks</h2>
+            <p>Practical books for communication, confidence, college life, personal branding, presentation skills, side hustles, independence, and professional manners.</p>
+            <Link className="brutalButton" href="/life-career">Browse Playbooks</Link>
+          </article>
         </div>
       </section>
 
-      <section className={styles.roadmapSection}>
-        <div className="container">
-          <span className="tag">Coming soon</span>
-          <h2>New learning resources are always in progress.</h2>
-          <ul>
-            {["Linux Commands Handbook", "ChatGPT Prompts Handbook", "AI Tools & Uses Guide", "C Language Handbook", "HTML & CSS Handbooks", "Machine Learning Roadmap"].map((item) => (
-              <li key={item}><span>Coming Soon</span>{item}</li>
-            ))}
-          </ul>
-          <Link href={site.gumroadStore} className="brutalButton" target="_blank">Follow on Gumroad</Link>
+      <section className={styles.section}>
+        <div className={`container ${styles.gridThree}`}>
+          <article className={styles.card}>
+            <h2>How books are made</h2>
+            <p>{bookMakingProcess.join(" -> ")}. LearnStack books are shaped around clear topic order, simple language, practical examples, visual design, and buyer questions that should be answered before checkout.</p>
+          </article>
+          <article className={styles.card}>
+            <h2>Sample previews</h2>
+            <p>Free previews are available for selected books, with new samples added regularly.</p>
+          </article>
+          <article className={styles.card}>
+            <h2>Contact and support</h2>
+            <p>For order or download help, email {brand.contactEmail} with your Gumroad order email and product name. {brand.supportResponseTime}</p>
+          </article>
         </div>
       </section>
-    </>
+    </PageEntrance>
   );
 }

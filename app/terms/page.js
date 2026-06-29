@@ -1,4 +1,5 @@
 import JsonLd from "@/components/JsonLd";
+import PageEntrance from "@/components/PageEntrance";
 import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import styles from "./PolicyPage.module.css";
 
@@ -10,7 +11,7 @@ export const metadata = createMetadata({
 
 export default function PolicyPage() {
   return (
-    <>
+    <PageEntrance variant="fadeUp">
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Terms of Use", href: "/terms" }])} />
       <section className="pageHero">
         <div className="container">
@@ -46,6 +47,6 @@ export default function PolicyPage() {
           <p>If you have trouble accessing a purchase, contact LearnStack support with your order email, product name, and a short description of the issue.</p>
         </div>
       </section>
-    </>
+    </PageEntrance>
   );
 }
