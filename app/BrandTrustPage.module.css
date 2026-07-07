@@ -250,13 +250,16 @@
 
 .sampleCover span {
   display: grid;
-  width: 54px;
-  height: 54px;
+  width: min(78%, 108px);
+  min-height: 72px;
   place-items: center;
   border: 2px solid rgba(255, 255, 255, 0.7);
   background: rgba(13, 27, 62, 0.92);
   color: var(--white);
-  font-size: 0.95rem;
+  padding: 8px;
+  font-size: 0.82rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .sampleCoverImage {
@@ -326,6 +329,20 @@
   box-shadow: 2px 2px 0 var(--blue);
   padding: 7px 10px;
   color: var(--navy);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.disabledMiniButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid rgba(13, 27, 62, 0.32);
+  background: var(--off-white);
+  color: rgba(13, 27, 62, 0.72);
+  padding: 7px 10px;
   font-size: 0.86rem;
   font-weight: 900;
 }

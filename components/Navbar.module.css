@@ -29,21 +29,32 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
+  min-width: 0;
   max-width: 100%;
   color: var(--white);
   overflow: hidden;
   text-decoration: none;
+  white-space: normal;
+}
+
+.announcementCopy {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.topLine a span {
+.announcementCta {
   display: inline-flex;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.1);
   color: #ffde59;
-  font-size: 0.95em;
+  padding: 3px 7px;
+  font-size: 0.72rem;
   line-height: 1;
-  transform: translateY(-1px);
+  text-transform: uppercase;
 }
 
 .inner {
@@ -854,6 +865,15 @@
     letter-spacing: 0.04em;
   }
 
+  .topLine a {
+    gap: 7px;
+  }
+
+  .announcementCta {
+    padding: 3px 6px;
+    font-size: 0.64rem;
+  }
+
   .inner {
     width: min(100% - 22px, var(--container));
     min-height: 68px;
@@ -889,6 +909,10 @@
     padding: 6px 10px;
     font-size: 0.62rem;
     letter-spacing: 0.03em;
+  }
+
+  .announcementCopy {
+    max-width: 198px;
   }
 
   .overlay {

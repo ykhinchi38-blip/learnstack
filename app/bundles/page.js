@@ -1,51 +1,119 @@
+import Image from "next/image";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
-import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import PageEntrance from "@/components/PageEntrance";
+import { getBundleProductsResult } from "@/lib/gumroad";
+import { productDetailHref } from "@/lib/productRouting";
+import { breadcrumbJsonLd, collectionPageJsonLd, createMetadata } from "@/lib/seo";
 import styles from "./BundlesPage.module.css";
 
+export const revalidate = 300;
+
 export const metadata = createMetadata({
-  title: "Learning Bundles",
-  description: "Explore LearnStack bundle offers for programming, web development, data science, interview prep, and complete student learning packs.",
+  title: "LearnStack Book Bundles | Digital Learning Bundles",
+  description: "Explore LearnStack digital book bundles for students, coding beginners, interview preparation, web development, and practical learning.",
   path: "/bundles"
 });
 
-const items = [
-  ["Programming Starter Bundle", "A practical starting pack for students building confidence with coding fundamentals."],
-  ["Web Development Bundle", "Focused handbooks for learning frontend, backend, and project-ready web skills."],
-  ["Data Science Bundle", "Structured resources for Python, analysis, notebooks, and beginner-friendly data workflows."],
-  ["Interview Prep Bundle", "Revision-friendly notes for core concepts, problem solving, and quick interview refreshers."],
-  ["Complete LearnStack Bundle", "A wider study pack for learners who want multiple handbooks in one place."]
-];
+function BundleCover({ bundle, priority = false }) {
+  const coverImage = bundle.image || bundle.coverImage;
 
-export default function BundlesPage() {
+  if (!coverImage) {
+    return (
+      <div className={styles.coverFallback} role="img" aria-label={`${bundle.title} bundle cover`}>
+        <span>Bundle</span>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Learning Bundles", href: "/bundles" }])} />
-      <section className="pageHero">
+    <Image
+      src={coverImage}
+      alt={`${bundle.title} bundle cover by LearnStack`}
+      width={360}
+      height={480}
+      sizes="(max-width: 680px) 100vw, (max-width: 1080px) 45vw, 31vw"
+      className={styles.coverImage}
+      priority={priority}
+      unoptimized={String(coverImage).startsWith("http")}
+    />
+  );
+}
+
+function BundleCard({ bundle, priority = false }) {
+  const detailHref = productDetailHref(bundle);
+
+  return (
+    <article className={styles.bundleCard}>
+      <div className={styles.coverWrap}>
+        <BundleCover bundle={bundle} priority={priority} />
+        <span className={styles.badge}>Bundle</span>
+      </div>
+      <div className={styles.cardBody}>
+        <h2>{bundle.title}</h2>
+        <p>{bundle.summary || bundle.limitedDescription || "A curated LearnStack digital learning bundle."}</p>
+        <strong>{bundle.priceDisplay || "View price"}</strong>
+        <div className={styles.cardActions}>
+          <Link href={detailHref} className={styles.detailsButton}>Details</Link>
+          <a href={bundle.gumroadUrl} target="_blank" rel="noopener noreferrer" className={styles.buyButton}>
+            Buy on Gumroad
+          </a>
+          {bundle.sampleUrl && (
+            <a href={bundle.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleButton}>
+              Free Sample
+            </a>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default async function BundlesPage() {
+  const { products: bundles, error } = await getBundleProductsResult();
+
+  return (
+    <PageEntrance variant="fadeUp" stagger>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "LearnStack Book Bundles", href: "/bundles" }])} />
+      <JsonLd data={collectionPageJsonLd({
+        name: "LearnStack Book Bundles",
+        description: "Curated LearnStack digital book bundles for coding, interviews, web development, and student learning.",
+        path: "/bundles"
+      })} />
+
+      <section className={styles.hero}>
         <div className="container">
-          <span className="pageEyebrow">LearnStack</span>
-          <h1 className="pageTitle">Save more with focused bundles.</h1>
-          <p className="pageLead">Bundles help students buy a complete learning path instead of single isolated PDFs.</p>
+          <div className="breadcrumbText"><Link href="/">Home</Link><span>-</span><span>Bundles</span></div>
+          <span className="pageEyebrow">LearnStack Bundles</span>
+          <h1>LearnStack Book Bundles</h1>
+          <p>
+            Save time with curated LearnStack digital book bundles for coding, interviews, web development, and student learning.
+          </p>
         </div>
       </section>
+
       <section className={styles.section}>
-        <div className={`container ${styles.grid}`}>
-          <div className={styles.mainCard}>
-            <h2>Learning Bundles</h2>
-            <p>Bundles help students buy a complete learning path instead of single isolated PDFs.</p>
-            <Link href="/products" className="brutalButton">Browse Handbooks</Link>
-          </div>
-          <div className={styles.sideList}>
-            {items.map(([item, copy]) => (
-              <article key={item}>
-                <span aria-hidden="true">&rarr;</span>
-                <strong>{item}</strong>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
+        <div className="container">
+          {error ? (
+            <div className={styles.emptyState}>
+              <h2>Unable to load bundles right now.</h2>
+              <p>Please try again later.</p>
+            </div>
+          ) : bundles.length > 0 ? (
+            <div className={styles.bundleGrid}>
+              {bundles.map((bundle, index) => (
+                <BundleCard bundle={bundle} key={bundle.id} priority={index < 3} />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <h2>Bundles are being prepared. Please check again soon.</h2>
+              <p>Normal handbooks and kids books are still available through LearnStack/Gumroad.</p>
+              <Link href="/products" className="brutalButton">Browse Handbooks</Link>
+            </div>
+          )}
         </div>
       </section>
-    </>
+    </PageEntrance>
   );
 }

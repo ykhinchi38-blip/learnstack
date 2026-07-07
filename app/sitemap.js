@@ -1,4 +1,4 @@
-import { getKidsProducts, getLifeCareerProducts, getRegularProducts } from "@/lib/gumroad";
+import { getBundleProducts, getKidsProducts, getLifeCareerProducts, getRegularProducts } from "@/lib/gumroad";
 import { absoluteUrl } from "@/lib/seo";
 import localProducts, { slugify } from "@/data/products";
 import { resources } from "@/data/resources";
@@ -9,12 +9,14 @@ export default async function sitemap() {
   const liveProducts = await getRegularProducts();
   const liveKidsProducts = await getKidsProducts();
   const liveLifeCareerProducts = await getLifeCareerProducts();
+  const liveBundleProducts = await getBundleProducts();
   const localRegularProducts = localProducts.filter((product) => (product.audience || "regular") === "regular");
   const localKidsProducts = localProducts.filter((product) => product.audience === "kids");
   const localLifeCareerProducts = localProducts.filter((product) => product.audience === "life-career");
   const products = [...liveProducts, ...localRegularProducts];
   const kidsProducts = [...liveKidsProducts, ...localKidsProducts];
   const lifeCareerProducts = [...liveLifeCareerProducts, ...localLifeCareerProducts];
+  const bundleProducts = liveBundleProducts;
   const now = new Date();
 
   const staticRoutes = [
@@ -55,6 +57,7 @@ export default async function sitemap() {
   const productRoutes = products.map((product) => makeRouteEntry(`/products/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
   const kidsProductRoutes = kidsProducts.map((product) => makeRouteEntry(`/kids/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
   const lifeCareerProductRoutes = lifeCareerProducts.map((product) => makeRouteEntry(`/life-career/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
+  const bundleProductRoutes = bundleProducts.map((product) => makeRouteEntry(`/bundles/${product.slug || product.id}`, product.updatedAt || product.createdAt || now)).filter(Boolean);
   const resourceRoutes = resources.map((resource) => makeRouteEntry(`/resources/${resource.slug}`, resource.updatedAt || now)).filter(Boolean);
 
   const staticEntries = [...staticRoutes, ...categoryRoutes].map((route) => ({
@@ -62,7 +65,7 @@ export default async function sitemap() {
     lastModified: now
   }));
 
-  return [...staticEntries, ...productRoutes, ...kidsProductRoutes, ...lifeCareerProductRoutes, ...resourceRoutes].map(({ route, lastModified }) => ({
+  return [...staticEntries, ...productRoutes, ...kidsProductRoutes, ...lifeCareerProductRoutes, ...bundleProductRoutes, ...resourceRoutes].map(({ route, lastModified }) => ({
     url: absoluteUrl(route),
     lastModified,
     changeFrequency: route.startsWith("/products") || route.startsWith("/kids/") || route.startsWith("/life-career/") ? "weekly" : "monthly",

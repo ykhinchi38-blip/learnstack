@@ -4,19 +4,22 @@ import JsonLd from "@/components/JsonLd";
 import PageEntrance from "@/components/PageEntrance";
 import { getAmazonPaperbackProducts } from "@/data/amazonPaperbacks";
 import { getAllProducts } from "@/lib/gumroad";
-import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, collectionPageJsonLd, createMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
 import styles from "../BrandTrustPage.module.css";
 
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "Amazon Paperback Editions",
-  description: "Digital PDF on LearnStack, paperback on Amazon. View LearnStack books with Amazon paperback links where available.",
+  title: "LearnStack on Amazon | Premium Paperback Books",
+  description: "Explore LearnStack paperback books on Amazon. Digital PDFs are available through LearnStack, and selected kids books are available as premium paperback editions.",
   path: "/amazon-special"
 });
 
 function AmazonBookCard({ product }) {
   const coverImage = product.image || product.coverImage;
+  const isLive = product.status === "live";
+  const statusLabel = isLive ? "Live on Amazon" : "Coming Soon on Amazon";
 
   return (
     <article className={styles.sampleCard}>
@@ -32,7 +35,7 @@ function AmazonBookCard({ product }) {
             unoptimized={coverImage.startsWith("http")}
           />
         ) : (
-          <span>{product.logoText || "PDF"}</span>
+          <span>{product.shortTitle || product.logoText || "Paperback"}</span>
         )}
       </div>
       <div className={styles.sampleBody}>
@@ -43,16 +46,24 @@ function AmazonBookCard({ product }) {
           {product.category && <span>Category: {product.category}</span>}
           {product.format && <span>Format: {product.format}</span>}
           {product.asin && <span>ASIN: {product.asin}</span>}
+          {product.price && <span>Price: {product.price}</span>}
+          <span>{statusLabel}</span>
         </div>
-        <p>Paperback edition on Amazon. Availability may vary by country.</p>
-        <a className={styles.miniButton} href={product.amazonUrl} target="_blank" rel="noopener noreferrer">
-          View on Amazon
-        </a>
-        {product.learnstackUrl && (
-          <Link className={styles.miniButton} href={product.learnstackUrl}>
+        {product.description && <p>{product.description}</p>}
+        <div className={styles.sampleActions}>
+          {isLive ? (
+            <a className={styles.miniButton} href={product.amazonUrl} target="_blank" rel="noopener noreferrer">
+              View on Amazon
+            </a>
+          ) : (
+            <span className={styles.disabledMiniButton}>Coming Soon on Amazon</span>
+          )}
+          {product.digitalUrl && (
+          <Link className={styles.miniButton} href={product.digitalUrl}>
             View Digital PDF
           </Link>
-        )}
+          )}
+        </div>
       </div>
     </article>
   );
@@ -65,22 +76,33 @@ export default async function AmazonSpecialPage() {
   return (
     <PageEntrance variant="slideSoft" stagger>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Amazon Paperback Editions", href: "/amazon-special" }])} />
+      <JsonLd data={collectionPageJsonLd({
+        name: "LearnStack on Amazon",
+        description: "Selected LearnStack kids books available as Amazon paperback editions.",
+        path: "/amazon-special"
+      })} />
 
       <section className={styles.amazonHero}>
         <div className={`container ${styles.amazonHeroGrid}`}>
           <div>
             <span className="pageEyebrow">Amazon Paperback Editions</span>
-            <h1>Digital PDF on LearnStack, paperback on Amazon.</h1>
+            <h1>Digital PDFs on LearnStack. Premium paperbacks on Amazon.</h1>
             <p>
-              LearnStack keeps digital PDF editions available through Gumroad, and shows Amazon paperback links only where a real paperback edition is published.
+              LearnStack books are available as digital PDFs through LearnStack/Gumroad, and selected titles are also available as paperback editions on Amazon.
             </p>
+            <div className={styles.actions}>
+              <a className="brutalButton" href={site.amazonAuthorUrl} target="_blank" rel="noopener noreferrer">
+                View LearnStack Author Page
+              </a>
+              <Link className="brutalButton brutalButtonWhite" href="/kids/books">
+                Browse Digital PDFs
+              </Link>
+            </div>
             <aside className={styles.availabilityNote} aria-labelledby="availability-note-title">
               <h2 id="availability-note-title">Availability note</h2>
               <p>
-                Some Amazon paperback editions may not be deliverable in every country or region. Availability can vary by marketplace, delivery location, printing availability, and Amazon&apos;s regional stock status. If a paperback shows as unavailable in your country, you can still check the digital PDF edition on LearnStack/Gumroad where available.
+                Paperback availability can vary by country, marketplace, and delivery location. If a paperback is unavailable in your region, you can still explore the digital PDF edition where available.
               </p>
-              <small>Digital PDF on LearnStack, paperback on Amazon.</small>
-              <small>Paperback availability may vary by country, marketplace, and delivery location.</small>
             </aside>
           </div>
           <div className={styles.amazonHeroCards} aria-label="Amazon special summary">
@@ -90,11 +112,11 @@ export default async function AmazonSpecialPage() {
             </article>
             <article>
               <strong>Paperback</strong>
-              <span>Amazon paperback availability may vary by delivery location.</span>
+              <span>Selected LearnStack Kids titles are available as premium printed editions.</span>
             </article>
             <article>
-              <strong>{amazonProducts.length || "Soon"}</strong>
-              <span>{amazonProducts.length === 1 ? "paperback link configured" : "paperback links configured"}</span>
+              <strong>{amazonProducts.filter((product) => product.status === "live").length}</strong>
+              <span>live paperback editions currently configured</span>
             </article>
           </div>
         </div>
@@ -104,11 +126,11 @@ export default async function AmazonSpecialPage() {
         <div className={`container ${styles.gridTwo}`}>
           <article className={styles.card}>
             <h2>Why paperback editions are special</h2>
-            <p>Some readers prefer printed books for offline study, parent-child reading, classroom use, or long practice sessions.</p>
+            <p>Printed books are helpful for offline reading, parent-child learning, classroom use, and long practice sessions.</p>
           </article>
           <article className={styles.card}>
             <h2>How availability works</h2>
-            <p>Paperback links appear here only when an Amazon edition is published and a real product link is available.</p>
+            <p>Live books show an Amazon button. Publishing books stay clearly marked as coming soon until they are available.</p>
           </article>
         </div>
       </section>
@@ -133,7 +155,7 @@ export default async function AmazonSpecialPage() {
             </div>
           )}
           <div className={styles.bottomNote}>
-            <p>Having trouble with Amazon availability? Check the digital PDF edition on LearnStack/Gumroad where available.</p>
+            <p>Amazon availability may vary by region.</p>
           </div>
         </div>
       </section>

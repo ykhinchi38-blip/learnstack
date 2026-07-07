@@ -1,82 +1,182 @@
+.hero {
+  padding: clamp(58px, 8vw, 84px) 0;
+  border-bottom: var(--border);
+  background:
+    linear-gradient(135deg, rgba(255, 211, 77, 0.28) 0 34%, transparent 34% 100%),
+    var(--off-white);
+}
+
+.hero h1 {
+  max-width: 880px;
+  margin: 16px 0;
+  color: var(--navy);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+}
+
+.hero p {
+  max-width: 780px;
+  color: rgba(13, 27, 62, 0.76);
+  font-size: clamp(1rem, 1.7vw, 1.14rem);
+  font-weight: 800;
+  line-height: 1.7;
+}
+
 .section {
   padding: var(--section-pad) 0;
   background: var(--off-white);
   border-bottom: var(--border);
 }
 
-.grid {
+.bundleGrid {
   display: grid;
-  grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1fr);
-  gap: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
 }
 
-.mainCard,
-.sideList article {
-  border: var(--border);
-  box-shadow: var(--shadow);
+.bundleCard {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 3px solid var(--navy);
   background: var(--white);
-  padding: 28px;
+  box-shadow: 5px 5px 0 var(--blue);
 }
 
-.mainCard {
-  background: var(--navy);
-  color: var(--white);
+.coverWrap {
+  position: relative;
+  border-bottom: 3px solid var(--navy);
+  background: var(--paper);
+}
+
+.coverImage,
+.coverFallback {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.coverFallback {
   display: grid;
-  gap: 20px;
-  align-content: start;
+  place-items: center;
+  background:
+    linear-gradient(135deg, var(--navy) 0 48%, #ffd34d 48% 100%);
 }
 
-.mainCard h2 {
-  color: var(--white);
-  font-size: clamp(2rem, 4vw, 3rem);
+.coverFallback span {
+  border: 3px solid var(--navy);
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 4px 4px 0 var(--blue);
+  padding: 14px 16px;
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-.mainCard p {
-  color: rgba(255, 255, 255, 0.78);
+.badge {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  border: 2px solid var(--navy);
+  background: #ffd34d;
+  color: var(--navy);
+  box-shadow: 2px 2px 0 var(--navy);
+  padding: 5px 8px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardBody {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: 12px;
+  padding: clamp(18px, 2.6vw, 24px);
+}
+
+.cardBody h2 {
+  color: var(--navy);
+  font-size: clamp(1.34rem, 2.3vw, 1.7rem);
+  line-height: 1.08;
+}
+
+.cardBody p {
+  color: rgba(13, 27, 62, 0.74);
   font-weight: 800;
+  line-height: 1.58;
 }
 
-.sideList {
+.cardBody strong {
+  color: var(--navy);
+  font-size: 1.02rem;
+}
+
+.cardActions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 9px;
 }
 
-.sideList article {
-  min-height: 190px;
-  display: grid;
-  align-content: space-between;
-  background: var(--sage);
+.detailsButton,
+.buyButton,
+.sampleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 2px solid var(--navy);
+  box-shadow: 2px 2px 0 var(--navy);
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
 }
 
-.sideList article:nth-child(3n) {
+.detailsButton {
+  background: var(--white);
+  color: var(--navy);
+}
+
+.buyButton {
   background: var(--blue);
   color: var(--white);
 }
 
-.sideList span {
-  color: var(--blue);
-  font-weight: 900;
-  font-size: 1.4rem;
+.sampleButton {
+  background: var(--off-white);
+  color: var(--navy);
 }
 
-.sideList strong {
-  font-family: var(--font-display), var(--font-display-fallback);
-  font-size: 1.2rem;
+.emptyState {
+  max-width: 760px;
+  border: 3px solid var(--navy);
+  background: var(--white);
+  box-shadow: 5px 5px 0 var(--blue);
+  padding: clamp(24px, 4vw, 38px);
 }
 
-.sideList p {
-  color: var(--black);
+.emptyState h2 {
+  color: var(--navy);
+  margin-bottom: 12px;
 }
 
-.sideList article:nth-child(3n) p,
-.sideList article:nth-child(3n) span {
-  color: var(--white);
+.emptyState p {
+  margin-bottom: 22px;
+  color: rgba(13, 27, 62, 0.74);
+  font-weight: 800;
 }
 
-@media (max-width: 960px) {
-  .grid,
-  .sideList {
+@media (max-width: 1080px) {
+  .bundleGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .bundleGrid {
     grid-template-columns: 1fr;
   }
 }

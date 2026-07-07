@@ -19,6 +19,7 @@ export default function Footer() {
           <h3>Explore</h3>
           <ul>
             <li><Link href="/products">Handbooks</Link></li>
+            <li><Link href="/bundles">Bundles</Link></li>
             <li><Link href="/kids">Kids Books</Link></li>
             <li><Link href="/kids/books">All Kids Books</Link></li>
             <li><Link href="/life-career">Life & Career</Link></li>

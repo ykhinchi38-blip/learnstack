@@ -1,17 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProductImageGallery from "@/components/ProductImageGallery";
 import { findAmazonBookForProduct } from "@/data/amazonPaperbacks";
 import { brand } from "@/data/brand";
 import { productAudienceLabel, productDetailHref } from "@/lib/productRouting";
 import styles from "./ProductDetailView.module.css";
 
 function normalizeImageKey(value) {
-  return String(value || "").trim().toLowerCase();
+  const text = String(value || "").trim().toLowerCase();
+
+  if (!text) return "";
+
+  try {
+    const parsed = new URL(text);
+    parsed.hash = "";
+    parsed.search = "";
+    return parsed.toString().replace(/\/$/, "");
+  } catch {
+    return text.replace(/[?#].*$/, "").replace(/\/$/, "");
+  }
 }
 
 function imageSource(image) {
   if (typeof image === "string") return image;
-  return image?.url || image?.src || image?.href || image?.image || "";
+  return image?.url || image?.src || image?.href || image?.image || image?.image_url || image?.thumbnail_url || image?.cover_url || "";
 }
 
 function imageFallbackKey(image) {
@@ -42,11 +54,70 @@ export function dedupeImages(images = [], excludeImages = []) {
   return unique;
 }
 
-function getPreviewImages(product) {
-  const cover = product.image || product.coverImage;
-  const images = Array.isArray(product.previewImages) ? product.previewImages : [];
+function collectImageValues(value, images = [], seen = new Set()) {
+  if (!value) return images;
 
-  return dedupeImages(images, [cover]).slice(0, 4);
+  if (typeof value === "string") {
+    images.push(value);
+    return images;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectImageValues(item, images, seen));
+    return images;
+  }
+
+  if (typeof value === "object") {
+    if (seen.has(value)) return images;
+    seen.add(value);
+
+    const directImage = imageSource(value);
+
+    if (directImage) {
+      images.push(directImage);
+    }
+
+    [
+      value.previewImages,
+      value.preview_images,
+      value.product_previews,
+      value.productPreviews,
+      value.demoImages,
+      value.demo_images,
+      value.images,
+      value.pictures,
+      value.previews,
+      value.preview,
+      value.file_info,
+      value.fileInfo,
+      value.covers
+    ].forEach((item) => collectImageValues(item, images, seen));
+  }
+
+  return images;
+}
+
+export function getProductPreviewImages(product) {
+  const candidates = collectImageValues([
+    product.image,
+    product.coverImage,
+    product.thumbnail,
+    product.thumbnailUrl,
+    product.thumbnail_url,
+    product.previewImages,
+    product.preview_images,
+    product.demoImages,
+    product.demo_images,
+    product.images,
+    product.pictures,
+    product.previews,
+    product.preview,
+    product.product_previews,
+    product.productPreviews,
+    product.raw
+  ]);
+
+  return dedupeImages(candidates);
 }
 
 function isExternalImage(src = "") {
@@ -185,27 +256,7 @@ function PreviewPanel({ product, previewImages }) {
       )}
 
       {previewImages.length > 0 ? (
-        <div className={styles.previewGrid} aria-label={`${product.title} preview images`}>
-          {previewImages.map((image, index) => (
-            <a
-              key={image}
-              href={image}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.previewButton}
-              aria-label={`Open ${product.title} preview image ${index + 1}`}
-            >
-              <ProductImage
-                src={image}
-                title={product.title}
-                alt={`${product.title} preview image ${index + 1}`}
-                className={styles.previewImage}
-                width={360}
-                height={260}
-              />
-            </a>
-          ))}
-        </div>
+        <ProductImageGallery images={previewImages} title={product.title} />
       ) : (
         <p className={styles.previewEmpty}>Preview images coming soon.</p>
       )}
@@ -252,7 +303,7 @@ function RelatedResourceCard({ resource }) {
 
 export default function ProductDetailView({ product, catalogHref, catalogLabel, eyebrow, relatedProducts = [], relatedResources = [] }) {
   const coverImage = product.image || product.coverImage;
-  const previewImages = getPreviewImages(product);
+  const previewImages = getProductPreviewImages(product);
   const amazonBook = findAmazonBookForProduct(product);
   const amazonUrl = amazonBook?.amazonUrl || product.amazonUrl;
   const isKidsBook = product.audience === "kids";

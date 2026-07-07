@@ -6,12 +6,14 @@ import CurrentOffers from "@/components/CurrentOffers";
 import Icon from "@/components/Icon";
 import JsonLd from "@/components/JsonLd";
 import PageEntrance from "@/components/PageEntrance";
+import { getHomepageAmazonPaperbackProducts } from "@/data/amazonPaperbacks";
 import { brand, bookMakingProcess } from "@/data/brand";
 import { getFeaturedResources } from "@/data/resources";
 import { getAllProducts, getKidsProducts, getLifeCareerProducts, getRegularProducts } from "@/lib/gumroad";
 import { productDetailHref } from "@/lib/productRouting";
 import { getPublicSamples } from "@/lib/sampleMatching";
 import { createMetadata, breadcrumbJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import { site } from "@/lib/site";
 import styles from "./HomePage.module.css";
 
 export const revalidate = 300;
@@ -232,6 +234,48 @@ function BookshelfIllustration() {
   );
 }
 
+function AmazonPaperbackCard({ book, priority = false }) {
+  const coverImage = book.image || book.coverImage;
+
+  return (
+    <article className={styles.amazonBookCard}>
+      <div className={styles.amazonBookCover}>
+        {coverImage ? (
+          <Image
+            src={coverImage}
+            alt={`${book.shortTitle || book.title} paperback cover`}
+            width={210}
+            height={280}
+            sizes="(max-width: 680px) 46vw, 210px"
+            priority={priority}
+            unoptimized={coverImage.startsWith("http")}
+          />
+        ) : (
+          <span>{book.shortTitle || "LearnStack"}</span>
+        )}
+      </div>
+      <div className={styles.amazonBookBody}>
+        <span className={styles.amazonBookMeta}>{book.category} / {book.format}</span>
+        <h3>{book.shortTitle || book.title}</h3>
+        <div className={styles.amazonBookDetails}>
+          <span>Live on Amazon</span>
+          {book.price && <span>{book.price}</span>}
+        </div>
+        <div className={styles.amazonBookActions}>
+          <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer">
+            View on Amazon
+          </a>
+          {book.digitalUrl && (
+            <Link href={book.digitalUrl}>
+              View Digital PDF
+            </Link>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default async function HomePage() {
   const [products, kidsProducts, lifeCareerProducts, allProducts] = await Promise.all([
     getRegularProducts(),
@@ -244,6 +288,8 @@ export default async function HomePage() {
   const lifeCareerPreview = lifeCareerProducts.slice(0, 3);
   const homepageSamples = getPublicSamples(allProducts).slice(0, 6);
   const featuredResources = getFeaturedResources(6);
+  const homepageAmazonBooks = getHomepageAmazonPaperbackProducts(allProducts, 4);
+  const bundlePreview = allProducts.filter((product) => product.isBundle).slice(0, 2);
 
   return (
     <PageEntrance variant="revealHero" stagger>
@@ -273,6 +319,22 @@ export default async function HomePage() {
           </div>
         </div>
         <div className={styles.heroStripe} />
+      </section>
+
+      <section className={styles.amazonTickerSection} aria-label="Amazon paperback announcement">
+        <a href={site.amazonAuthorUrl} target="_blank" rel="noopener noreferrer" className={styles.amazonTicker}>
+          <span className={styles.tickerLabel}>NOW ON AMAZON</span>
+          <span className={styles.tickerViewport}>
+            <span className={styles.tickerTrack}>
+              <span>Premium LearnStack paperbacks are now available on Amazon</span>
+              <span>Printed books for offline reading</span>
+              <span>Explore LearnStack paperbacks</span>
+              <span>Premium LearnStack paperbacks are now available on Amazon</span>
+              <span>Printed books for offline reading</span>
+              <span>Explore LearnStack paperbacks</span>
+            </span>
+          </span>
+        </a>
       </section>
 
       <section className={styles.statsStrip}>
@@ -390,6 +452,19 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {bundlePreview.length > 0 && (
+        <section className={styles.bundleCtaSection} aria-labelledby="homepage-bundles-heading">
+          <div className={`container ${styles.bundleCtaCard}`}>
+            <div>
+              <span className="tag">Bundles</span>
+              <h2 id="homepage-bundles-heading">Looking for complete learning packs?</h2>
+              <p>Explore curated LearnStack book bundles without mixing them into the normal handbook catalog.</p>
+            </div>
+            <Link href="/bundles" className="brutalButton">Explore Bundles</Link>
+          </div>
+        </section>
+      )}
+
       <section className={styles.kidsDiscoverySection} aria-labelledby="homepage-kids-heading">
         <div className={`container ${styles.kidsDiscoveryGrid}`}>
           <div className={styles.kidsDiscoveryCopy}>
@@ -458,6 +533,31 @@ export default async function HomePage() {
                 </Link>
               ))}
               </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.amazonShowcaseSection} aria-labelledby="amazon-paperbacks-heading">
+        <div className="container">
+          <div className={styles.amazonShowcaseHeader}>
+            <div>
+              <span className="tag">Now on Amazon</span>
+              <h2 id="amazon-paperbacks-heading">Premium LearnStack Paperbacks</h2>
+              <p>
+                Prefer printed books? Explore selected LearnStack Kids paperback editions on Amazon.
+              </p>
+            </div>
+            <div className={styles.amazonShowcaseActions}>
+              <Link href="/amazon-special" className={styles.storyButton}>View All Amazon Paperbacks</Link>
+              <a href={site.amazonAuthorUrl} target="_blank" rel="noopener noreferrer" className={styles.secondaryButton}>
+                LearnStack Author Page
+              </a>
+            </div>
+          </div>
+          <div className={styles.amazonBookGrid}>
+            {homepageAmazonBooks.map((book, index) => (
+              <AmazonPaperbackCard book={book} key={book.asin} priority={index === 0} />
+            ))}
           </div>
         </div>
       </section>

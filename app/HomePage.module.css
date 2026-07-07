@@ -94,6 +94,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .heroMockup::before {
@@ -111,7 +112,7 @@
   border: 5px solid #0d1b3e;
   background: #f5f0e8;
   box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.4), 6px 6px 0 #2d6be4;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bookshelf::before {
@@ -133,6 +134,7 @@
 .bookcaseSection {
   position: relative;
   min-width: 0;
+  overflow: hidden;
   display: grid;
   grid-template-rows: repeat(3, 1fr);
 }
@@ -145,7 +147,7 @@
   padding: 24px 22px 24px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.18), transparent 34%);
   box-shadow: inset 0 -8px 12px rgba(0, 0, 0, 0.3);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .shelfCompartment::before {
@@ -182,6 +184,7 @@
   width: 100%;
   height: 100%;
   padding-bottom: 14px;
+  overflow: hidden;
 }
 
 .book {
@@ -203,7 +206,7 @@
 }
 
 .book:hover {
-  transform: translateY(-12px) rotate(0deg) scale(var(--book-scale, 1));
+  transform: translateY(-6px) rotate(0deg) scale(var(--book-scale, 1));
   box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.2), 2px 0 4px rgba(0, 0, 0, 0.3), 0 14px 22px rgba(255, 183, 92, 0.24);
 }
 
@@ -293,6 +296,87 @@
   height: 12px;
   background: #2d6be4;
   border-top: 2px solid #0a1628;
+}
+
+.amazonTickerSection {
+  border-bottom: 3px solid #0d1b3e;
+  background: #0d1b3e;
+  overflow: hidden;
+}
+
+.amazonTicker {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.tickerLabel {
+  align-self: stretch;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-right: 3px solid #0d1b3e;
+  background: #ffd34d;
+  color: #0d1b3e;
+  padding: 8px 16px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tickerViewport {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  padding-left: 16px;
+}
+
+.tickerTrack {
+  display: inline-flex;
+  width: max-content;
+  min-width: 100%;
+  gap: 30px;
+  padding-right: 28px;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: amazonTicker 34s linear infinite;
+}
+
+.amazonTicker:hover .tickerTrack {
+  animation-play-state: paused;
+}
+
+.tickerTrack span {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.tickerTrack span::after {
+  content: "\2022";
+  margin-left: 30px;
+  color: #ffd34d;
+}
+
+@keyframes amazonTicker {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .storyTeaser {
@@ -397,6 +481,7 @@
 .trustCard {
   display: grid;
   gap: 8px;
+  min-width: 0;
   min-height: 100%;
   border: 2px solid #0d1b3e;
   background: #ffffff;
@@ -414,6 +499,7 @@
   font-family: var(--font-display), var(--font-display-fallback);
   font-size: 1.05rem;
   line-height: 1.08;
+  overflow-wrap: anywhere;
 }
 
 .trustCard span {
@@ -421,6 +507,200 @@
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.bundleCtaSection {
+  padding: clamp(42px, 6vw, 62px) 0;
+  border-bottom: 3px solid #0d1b3e;
+  background: var(--sage);
+}
+
+.bundleCtaCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 3px solid #0d1b3e;
+  background: #ffffff;
+  box-shadow: 5px 5px 0 #2d6be4;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.bundleCtaCard h2 {
+  max-width: 760px;
+  margin-top: 12px;
+  color: #0d1b3e;
+  font-size: clamp(1.75rem, 4vw, 2.7rem);
+}
+
+.bundleCtaCard p {
+  max-width: 680px;
+  margin-top: 10px;
+  color: rgba(13, 27, 62, 0.74);
+  font-weight: 800;
+  line-height: 1.65;
+}
+
+.amazonShowcaseSection {
+  padding: clamp(58px, 7vw, 82px) 0;
+  border-bottom: 3px solid #0d1b3e;
+  background:
+    linear-gradient(135deg, rgba(255, 211, 77, 0.28) 0 30%, transparent 30% 100%),
+    #fffdf8;
+}
+
+.amazonShowcaseHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.amazonShowcaseHeader h2 {
+  max-width: 760px;
+  margin-top: 14px;
+  color: #0d1b3e;
+  font-size: clamp(2.05rem, 5vw, 3.45rem);
+}
+
+.amazonShowcaseHeader p {
+  max-width: 680px;
+  margin-top: 12px;
+  color: rgba(13, 27, 62, 0.76);
+  font-size: clamp(1rem, 1.6vw, 1.1rem);
+  font-weight: 800;
+  line-height: 1.68;
+}
+
+.amazonShowcaseActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: min(100%, 390px);
+}
+
+.amazonShowcaseActions .storyButton {
+  margin-top: 0;
+}
+
+.amazonShowcaseActions .secondaryButton {
+  margin-top: 0;
+}
+
+.amazonBookGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.amazonBookCard {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 3px solid #0d1b3e;
+  background: #ffffff;
+  box-shadow: 5px 5px 0 #2d6be4;
+}
+
+.amazonBookCover {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  border-bottom: 3px solid #0d1b3e;
+  background:
+    linear-gradient(135deg, #0d1b3e 0 50%, #ffd34d 50% 100%);
+  overflow: hidden;
+}
+
+.amazonBookCover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.amazonBookCover span {
+  display: grid;
+  place-items: center;
+  width: min(78%, 170px);
+  min-height: 96px;
+  border: 3px solid #0d1b3e;
+  background: #ffffff;
+  color: #0d1b3e;
+  box-shadow: 4px 4px 0 #2d6be4;
+  padding: 12px;
+  font-family: var(--font-display), var(--font-display-fallback);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 900;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.amazonBookBody {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 10px;
+  padding: 16px;
+}
+
+.amazonBookMeta,
+.amazonBookDetails span {
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid rgba(13, 27, 62, 0.22);
+  background: #f5f0e8;
+  color: #0d1b3e;
+  padding: 4px 7px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.amazonBookBody h3 {
+  color: #0d1b3e;
+  font-size: clamp(1.1rem, 2vw, 1.38rem);
+  line-height: 1.08;
+}
+
+.amazonBookDetails {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 7px;
+}
+
+.amazonBookDetails span:first-child {
+  background: #eaf7ff;
+}
+
+.amazonBookActions {
+  display: grid;
+  gap: 8px;
+}
+
+.amazonBookActions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border: 2px solid #0d1b3e;
+  background: #2d6be4;
+  color: #ffffff;
+  box-shadow: 2px 2px 0 #0d1b3e;
+  padding: 8px 10px;
+  font-size: 0.84rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.amazonBookActions a + a {
+  background: #ffffff;
+  color: #0d1b3e;
+  box-shadow: 2px 2px 0 #2d6be4;
 }
 
 .insideSection {
@@ -1223,7 +1503,7 @@
   }
 
   .book:hover {
-    transform: translateY(-12px) rotate(0deg) scale(var(--book-scale));
+    transform: translateY(-5px) rotate(0deg) scale(var(--book-scale));
   }
 
   .flatBook {
@@ -1235,6 +1515,7 @@
   .featureGrid,
   .purchaseGrid,
   .kidsPreviewGrid,
+  .amazonBookGrid,
   .resourceGrid,
   .faqGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1284,12 +1565,26 @@
   }
 
   .heroActions,
+  .amazonShowcaseHeader,
+  .bundleCtaCard,
   .sectionHeader {
     display: grid;
     gap: 12px;
   }
 
   .secondaryButton {
+    width: 100%;
+  }
+
+  .amazonShowcaseActions {
+    display: grid;
+    justify-content: stretch;
+    min-width: 0;
+  }
+
+  .amazonShowcaseActions .storyButton,
+  .amazonShowcaseActions .secondaryButton,
+  .bundleCtaCard :global(.brutalButton) {
     width: 100%;
   }
 
@@ -1328,14 +1623,20 @@
   }
 
   .flatBook {
-    margin-left: clamp(4px, 1.8vw, 10px);
-    margin-right: clamp(8px, 3vw, 18px);
+    margin-left: 0;
+    margin-right: clamp(2px, 1.4vw, 6px);
+    transform: rotate(0deg) scale(var(--book-scale));
+  }
+
+  .flatBook:hover {
+    transform: rotate(0deg) scale(var(--book-scale));
   }
 
   .featuredGrid,
   .featureGrid,
   .purchaseGrid,
   .kidsDiscoveryGrid,
+  .amazonBookGrid,
   .sampleGroups,
   .resourceGrid,
   .faqGrid {
@@ -1393,6 +1694,8 @@
   .featuredSection,
   .whySection,
   .discountSection,
+  .amazonShowcaseSection,
+  .bundleCtaSection,
   .pathSection,
   .samplesSection,
   .resourcesSection,
@@ -1432,6 +1735,47 @@
 
   .processGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tickerTrack {
+    width: auto;
+    animation: none;
+    transform: none;
+  }
+
+  .tickerTrack span:nth-child(n + 2),
+  .tickerTrack span::after {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .amazonTicker {
+    min-height: 38px;
+  }
+
+  .tickerLabel {
+    align-self: center;
+    min-height: 38px;
+    padding: 8px 10px;
+    border-right: 2px solid #0d1b3e;
+    font-size: 0.66rem;
+  }
+
+  .tickerViewport {
+    padding-left: 10px;
+  }
+
+  .tickerTrack {
+    padding-block: 9px;
+    gap: 22px;
+    font-size: 0.7rem;
+  }
+
+  .tickerTrack span::after {
+    margin-left: 22px;
   }
 }
 
@@ -1487,7 +1831,18 @@
   }
 
   .flatBook {
-    margin-left: 3px;
-    margin-right: 7px;
+    margin-left: 0;
+    margin-right: 4px;
+    transform: rotate(0deg) scale(var(--book-scale));
+  }
+
+  .flatBook:hover {
+    transform: rotate(0deg) scale(var(--book-scale));
+  }
+}
+
+@media (max-width: 430px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
   }
 }

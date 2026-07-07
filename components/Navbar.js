@@ -19,6 +19,7 @@ const mainLinks = [
 ];
 
 const moreLinks = [
+  { href: "/bundles", label: "Bundles" },
   { href: "/life-career", label: "Life & Career" },
   { href: "/free-samples", label: "Free Samples" },
   { href: "/why-learnstack", label: "Why LearnStack" },
@@ -236,7 +237,9 @@ export default function Navbar() {
     <header className={`${styles.header} ${isKidsRoute ? styles.kidsHeader : ""}`}>
       <div className={styles.topLine}>
         <Link href={site.gumroadStore} target="_blank" rel="noopener noreferrer">
-          Follow us on Gumroad <span aria-hidden="true">&rarr;</span>
+          <span className={styles.announcementCopy}>Follow us on Gumroad to get extra discounts on LearnStack books.</span>
+          {" "}
+          <span className={styles.announcementCta}>Follow on Gumroad</span>
         </Link>
       </div>
 
@@ -399,13 +402,13 @@ export default function Navbar() {
 
           <div className={styles.mobileActions}>
             <Link
-              href={site.gumroadStore}
+              href={site.amazonAuthorUrl}
               className={styles.gumroadMobile}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
             >
-              Follow us on Gumroad
+              View LearnStack on Amazon
             </Link>
           </div>
         </div>
