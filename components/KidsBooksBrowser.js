@@ -65,6 +65,7 @@ export default function KidsBooksBrowser({ products = [] }) {
                 priority={index < 2}
                 buyLabel="Buy on Gumroad"
                 showSample
+                showRupeeEquivalent
               />
             ))}
           </div>

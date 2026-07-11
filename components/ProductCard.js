@@ -13,12 +13,38 @@ const categoryAccentColors = {
   "Web Development": "#4a8af4"
 };
 
+const USD_TO_INR_RATE = 93;
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0
+});
+
 function getCardAccent(product) {
   return categoryAccentColors[product.category] || product.accentColor || "#2d6be4";
 }
 
 function getSpineLabel(product) {
   return (product.logoText || product.title.slice(0, 3)).toUpperCase();
+}
+
+function getDollarAmount(product) {
+  if (String(product.currency || "").toUpperCase() === "USD" && Number(product.price) > 0) {
+    return Number(product.price);
+  }
+
+  const displayPrice = String(product.priceDisplay || "");
+  const dollarMatch = displayPrice.match(/\$\s*([\d,]+(?:\.\d+)?)/);
+
+  return dollarMatch ? Number(dollarMatch[1].replace(/,/g, "")) : 0;
+}
+
+function getRupeeEquivalent(product) {
+  const dollarAmount = getDollarAmount(product);
+
+  if (!dollarAmount) return "";
+
+  return `Approx. ${inrFormatter.format(dollarAmount * USD_TO_INR_RATE)}`;
 }
 
 function ProductImage({ product, priority = false }) {
@@ -49,13 +75,21 @@ function ProductImage({ product, priority = false }) {
   );
 }
 
-export default function ProductCard({ product, showDetails = true, buyLabel = "Buy on Gumroad", priority = false, showSample = false }) {
+export default function ProductCard({
+  product,
+  showDetails = true,
+  buyLabel = "Buy on Gumroad",
+  priority = false,
+  showSample = false,
+  showRupeeEquivalent = false
+}) {
   const cardAccent = getCardAccent(product);
   const router = useRouter();
   const [opening, setOpening] = useState(false);
   const prefetched = useRef(false);
   const detailHref = productDetailHref(product);
   const cardSummary = product.summary || product.tagline || product.limitedDescription;
+  const rupeeEquivalent = showRupeeEquivalent ? getRupeeEquivalent(product) : "";
 
   useEffect(() => {
     setOpening(false);
@@ -86,6 +120,7 @@ export default function ProductCard({ product, showDetails = true, buyLabel = "B
         {cardSummary && <p className={styles.summary}>{cardSummary}</p>}
         <div className={styles.metaRow}>
           <strong>{product.priceDisplay || "View price"}</strong>
+          {rupeeEquivalent && <small>{rupeeEquivalent}</small>}
         </div>
         <div className={styles.actions}>
           {showDetails && (

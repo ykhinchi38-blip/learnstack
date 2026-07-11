@@ -317,6 +317,7 @@ export default async function KidsPage() {
                     priority={index < 2}
                     buyLabel="Buy on Gumroad"
                     showSample
+                    showRupeeEquivalent
                   />
                 ))}
               </div>
