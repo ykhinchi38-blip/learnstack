@@ -11,6 +11,7 @@
     "validate:samples": "node scripts/validate-sample-matching.js"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.10",
     "cloudinary": "^2.10.0",
     "next": "14.2.18",
     "next-pwa": "^5.6.0",

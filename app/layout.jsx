@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -70,6 +71,9 @@ export default function RootLayout({ children }) {
           <InstallBanner />
         </ToastProvider>
       </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+  <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+)}
     </html>
   );
 }
