@@ -4,15 +4,16 @@ import KidsBooksBrowser from "@/components/KidsBooksBrowser";
 import PageEntrance from "@/components/PageEntrance";
 import { getKidsProductsResult } from "@/lib/gumroad";
 import { getAllKidsProducts } from "@/lib/productCollections";
-import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, collectionPageJsonLd, createMetadata } from "@/lib/seo";
 import styles from "./KidsBooksPage.module.css";
 
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "All Kids Books",
-  description: "Colourful, practical, value-based books for curious kids from LearnStack.",
-  path: "/kids/books"
+  title: "Educational Children's Books & Printable Activities",
+  description: "Browse LearnStack educational children's books with stories, guided activities, coding ideas, and practical learning resources for families and classrooms.",
+  path: "/kids/books",
+  keywords: ["educational children's books", "printable children's activities", "classroom learning resources", "kids learning PDFs"]
 });
 
 export default async function KidsBooksPage() {
@@ -26,6 +27,7 @@ export default async function KidsBooksPage() {
         { name: "Kids Books", href: "/kids" },
         { name: "All Kids Books", href: "/kids/books" }
       ])} />
+      <JsonLd data={collectionPageJsonLd({ name: "Educational Children's Books and Activities", description: metadata.description, path: "/kids/books" })} />
 
       <section className={styles.hero}>
         <div className="container">

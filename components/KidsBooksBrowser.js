@@ -12,14 +12,18 @@ function normalize(value = "") {
 
 export default function KidsBooksBrowser({ products = [] }) {
   const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All");
+  const [ageRange, setAgeRange] = useState("All");
+  const [sort, setSort] = useState("recommended");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const categories = useMemo(() => ["All", ...Array.from(new Set(products.map((product) => product.category).filter(Boolean))).sort()], [products]);
+  const ages = useMemo(() => ["All", ...Array.from(new Set(products.map((product) => product.ageRange || product.badge).filter(Boolean))).sort()], [products]);
 
   const filteredProducts = useMemo(() => {
     const search = normalize(query);
 
-    if (!search) return products;
-
-    return products.filter((product) => {
+    const matches = products.filter((product) => {
       const searchable = [
         product.title,
         product.summary,
@@ -29,9 +33,19 @@ export default function KidsBooksBrowser({ products = [] }) {
         ...(Array.isArray(product.topics) ? product.topics : [])
       ].map(normalize).join(" ");
 
-      return searchable.includes(search);
+      const matchesCategory = category === "All" || product.category === category;
+      const productAge = product.ageRange || product.badge || "";
+      const matchesAge = ageRange === "All" || productAge === ageRange;
+      return matchesCategory && matchesAge && searchable.includes(search);
     });
-  }, [products, query]);
+
+    return [...matches].sort((a, b) => {
+      if (sort === "price-low") return (Number(a.price) || 0) - (Number(b.price) || 0);
+      if (sort === "price-high") return (Number(b.price) || 0) - (Number(a.price) || 0);
+      if (sort === "newest") return Date.parse(b.createdAt || b.updatedAt || 0) - Date.parse(a.createdAt || a.updatedAt || 0);
+      return Number(Boolean(b.featured || b.isFeatured)) - Number(Boolean(a.featured || a.isFeatured));
+    });
+  }, [products, query, category, ageRange, sort]);
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredProducts.length;
@@ -54,6 +68,11 @@ export default function KidsBooksBrowser({ products = [] }) {
         />
         <span>{filteredProducts.length} {filteredProducts.length === 1 ? "book" : "books"}</span>
       </div>
+      <div className={styles.filters}>
+        <label>Category<select value={category} onChange={(event) => { setCategory(event.target.value); setVisibleCount(PAGE_SIZE); }}>{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
+        <label>Age range<select value={ageRange} onChange={(event) => { setAgeRange(event.target.value); setVisibleCount(PAGE_SIZE); }}>{ages.map((item) => <option key={item}>{item}</option>)}</select></label>
+        <label>Sort<select value={sort} onChange={(event) => setSort(event.target.value)}><option value="recommended">Recommended</option><option value="newest">Newest</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select></label>
+      </div>
 
       {visibleProducts.length ? (
         <>
@@ -65,7 +84,6 @@ export default function KidsBooksBrowser({ products = [] }) {
                 priority={index < 2}
                 buyLabel="Buy on Gumroad"
                 showSample
-                showRupeeEquivalent
               />
             ))}
           </div>

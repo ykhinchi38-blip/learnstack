@@ -52,6 +52,15 @@
   margin-top: 28px;
 }
 
+.heroPricingNote {
+  max-width: 620px;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .heroActions :global(.brutalButton) {
   border: 3px solid #0d1b3e;
   background: #2d6be4;
@@ -716,6 +725,12 @@
   padding: clamp(60px, 7vw, 84px) 0;
   border-bottom: var(--border);
   background: var(--off-white);
+}
+
+.newsletterSection {
+  padding: clamp(44px, 6vw, 64px) 0;
+  border-bottom: var(--border);
+  background: var(--sage);
 }
 
 .pathSection {

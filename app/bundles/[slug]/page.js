@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import ProductDetailView from "@/components/ProductDetailView";
 import JsonLd from "@/components/JsonLd";
 import PageEntrance from "@/components/PageEntrance";
-import { getBundleProductBySlug, getBundleProducts } from "@/lib/gumroad";
+import { getAllProducts, getBundleProductBySlug, getBundleProducts } from "@/lib/gumroad";
 import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
+import { getRelatedProducts } from "@/lib/productCatalog";
+import { getBundleDetails } from "@/lib/bundleDetails";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -29,21 +31,23 @@ export async function generateMetadata({ params }) {
     description: productSeoDescription(bundle, "regular"),
     path: `/bundles/${bundle.slug || params.slug}`,
     image: bundle.image || bundle.coverImage || undefined,
+    imageAlt: `${bundle.title} bundle cover by LearnStack`,
     type: "product"
   });
 }
 
 export default async function BundleDetailPage({ params }) {
-  const [bundle, bundles] = await Promise.all([
+  const [bundle, bundles, products] = await Promise.all([
     getBundleProductBySlug(params.slug),
-    getBundleProducts()
+    getBundleProducts(),
+    getAllProducts()
   ]);
   if (!bundle) notFound();
 
   const bundlePath = `/bundles/${bundle.slug || params.slug}`;
-  const relatedProducts = bundles
-    .filter((item) => item.id !== bundle.id)
-    .slice(0, 3);
+  const bundleDetails = getBundleDetails(bundle, products);
+  const relatedProducts = getRelatedProducts(bundle, [...bundles, ...products], 6)
+    .filter((product) => !bundleDetails.excludedProductIds.includes(product.id));
 
   return (
     <PageEntrance variant="fadeScale">
@@ -60,6 +64,8 @@ export default async function BundleDetailPage({ params }) {
         catalogLabel="Bundles"
         eyebrow="LearnStack Bundle"
         relatedProducts={relatedProducts}
+        bundleDetails={bundleDetails}
+        excludedProductIds={bundleDetails.excludedProductIds}
       />
     </PageEntrance>
   );

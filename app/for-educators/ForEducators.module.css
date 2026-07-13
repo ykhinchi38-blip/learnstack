@@ -1,0 +1,22 @@
+.hero { padding: clamp(60px, 9vw, 110px) 0; border-bottom: 3px solid var(--navy); background: #e7f0e2; }
+.heroGrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr); gap: clamp(26px, 5vw, 68px); align-items: flex-end; }
+.hero h1 { max-width: 800px; margin: 14px 0; color: var(--navy); font-size: clamp(2.3rem, 5vw, 4.6rem); line-height: 0.98; }
+.hero p, .section p { color: rgba(13, 27, 62, 0.78); font-weight: 800; line-height: 1.65; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border: 2px solid var(--navy); background: var(--white); box-shadow: 3px 3px 0 var(--blue); color: var(--navy); padding: 10px 14px; font-weight: 900; }
+.heroCard { display: grid; gap: 10px; border: 3px solid var(--navy); background: var(--white); box-shadow: 6px 6px 0 var(--blue); padding: 22px; }
+.heroCard strong { color: var(--navy); font-size: 1.25rem; }
+.heroCard span { border-top: 1px solid rgba(13, 27, 62, 0.18); color: var(--navy); padding-top: 10px; font-weight: 800; }
+.section { padding: clamp(56px, 8vw, 92px) 0; }
+.sectionTitle { margin: 14px 0 0; color: var(--navy); font-size: clamp(1.65rem, 3vw, 2.35rem); }
+.caseGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 24px; }
+.caseGrid article, .faqGrid article { border: 2px solid var(--navy); background: var(--white); box-shadow: 4px 4px 0 var(--blue); padding: 22px; }
+.caseGrid h3, .notice h2, .accessGrid h2, .faqGrid h2 { margin: 0 0 10px; color: var(--navy); font-size: clamp(1.3rem, 2vw, 1.75rem); }
+.noticeSection { background: var(--navy); }
+.notice { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.notice h2, .notice p { color: var(--white); }
+.notice p { max-width: 820px; }
+.accessGrid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(26px, 5vw, 70px); align-items: end; border: 3px solid var(--navy); background: #f5f0e8; box-shadow: 5px 5px 0 var(--blue); padding: clamp(22px, 4vw, 36px); }
+.faqSection { background: #f5f0e8; border-top: 3px solid var(--navy); }
+.faqGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 24px; }
+@media (max-width: 760px) { .heroGrid, .accessGrid, .caseGrid, .faqGrid { grid-template-columns: 1fr; } .notice { display: grid; } .actions, .notice :global(.brutalButton), .accessGrid :global(.brutalButton) { display: grid; width: 100%; } }

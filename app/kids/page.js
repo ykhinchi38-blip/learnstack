@@ -1,21 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
+import AnalyticsPageView from "@/components/AnalyticsPageView";
 import JsonLd from "@/components/JsonLd";
 import PageEntrance from "@/components/PageEntrance";
 import { getKidsProductsResult } from "@/lib/gumroad";
 import { getFeaturedKidsProducts } from "@/lib/productCollections";
-import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, collectionPageJsonLd, createMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import styles from "./KidsPage.module.css";
 
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "Kids Learning Books, Stories & Curiosity Books",
+  title: "Educational Children's Books, Stories & Activities",
   description:
-    "Explore LearnStack Kids books with moral stories, curiosity-building questions, fun learning content, and digital access for young learners.",
-  path: "/kids"
+    "Explore educational children's books, social-emotional learning stories, coding resources, and printable activities for young learners, parents, and teachers.",
+  path: "/kids",
+  keywords: ["educational children's books", "social-emotional learning stories", "printable children's activities", "kids coding books"]
 });
 
 const whyItems = [
@@ -114,7 +116,9 @@ export default async function KidsPage() {
 
   return (
     <>
+      <AnalyticsPageView eventName="catalog_viewed" eventParams={{ catalog: "kids" }} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Kids Books", href: "/kids" }])} />
+      <JsonLd data={collectionPageJsonLd({ name: "Educational Children's Books", description: metadata.description, path: "/kids" })} />
       <JsonLd data={faqJsonLd} />
 
       <div className={styles.kidsIntro} aria-hidden="true">
@@ -317,7 +321,6 @@ export default async function KidsPage() {
                     priority={index < 2}
                     buyLabel="Buy on Gumroad"
                     showSample
-                    showRupeeEquivalent
                   />
                 ))}
               </div>

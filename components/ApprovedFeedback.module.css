@@ -1,0 +1,95 @@
+.section h2 {
+  margin: 8px 0 18px;
+  color: var(--black);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  line-height: 1.1;
+}
+
+.kicker {
+  color: var(--product-accent, var(--blue));
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  border: 2px solid var(--black);
+  background: var(--paper);
+  box-shadow: 3px 3px 0 var(--product-accent, var(--blue));
+  padding: 18px;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--black);
+  object-fit: cover;
+}
+
+.cardBody {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.feedback {
+  margin: 0;
+  color: rgba(10, 10, 10, 0.82);
+  font-weight: 800;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.person {
+  display: grid;
+  gap: 4px;
+}
+
+.person strong {
+  color: var(--black);
+}
+
+.person > span {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 5px;
+}
+
+.labels span {
+  border: 1px solid rgba(10, 10, 10, 0.35);
+  color: var(--black);
+  padding: 3px 6px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}

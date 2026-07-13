@@ -1,13 +1,14 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LoadingScreen from "@/components/LoadingScreen";
 import NetworkStatusManager from "@/components/NetworkStatusManager";
 import CookieBanner from "@/components/CookieBanner";
+import EducatorPartnershipPopup from "@/components/EducatorPartnershipPopup";
 import ScrollToTop from "@/components/ScrollToTop";
 import SlowConnectionWarner from "@/components/SlowConnectionWarner";
 import InstallBanner from "@/components/InstallBanner";
+import ConsentAwareAnalytics from "@/components/ConsentAwareAnalytics";
 import { ToastProvider } from "@/context/ToastContext";
 import { createMetadata, defaultDescription, defaultTitle, seoKeywords, titleTemplate } from "@/lib/seo";
 import "@/styles/globals.css";
@@ -48,6 +49,8 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html lang="en-IN">
       <body>
@@ -67,13 +70,12 @@ export default function RootLayout({ children }) {
           <main>{children}</main>
           <Footer />
           <CookieBanner />
+          <EducatorPartnershipPopup />
           <ScrollToTop />
           <InstallBanner />
         </ToastProvider>
       </body>
-      {process.env.NEXT_PUBLIC_GA_ID && (
-  <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-)}
+      {measurementId && <ConsentAwareAnalytics measurementId={measurementId} />}
     </html>
   );
 }

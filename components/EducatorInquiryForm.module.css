@@ -1,0 +1,41 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.form label {
+  display: grid;
+  gap: 7px;
+  color: var(--navy);
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  border: 2px solid var(--navy);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--navy);
+  padding: 10px 12px;
+  font: inherit;
+  resize: vertical;
+}
+
+.full,
+.success {
+  grid-column: 1 / -1;
+}
+
+.success {
+  color: #174f22;
+  font-weight: 800;
+}
+
+@media (max-width: 620px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}

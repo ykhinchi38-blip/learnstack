@@ -1,18 +1,21 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import ProductCatalog from "@/components/ProductCatalog";
 import SubscriberDiscount from "@/components/SubscriberDiscount";
+import AnalyticsPageView from "@/components/AnalyticsPageView";
 import JsonLd from "@/components/JsonLd";
 import PageEntrance from "@/components/PageEntrance";
 import { getRegularProductsResult } from "@/lib/gumroad";
-import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { createMetadata, breadcrumbJsonLd, collectionPageJsonLd } from "@/lib/seo";
 import styles from "./ProductsPage.module.css";
 
 export const revalidate = 300;
 
 export const metadata = createMetadata({
-  title: "PDF Handbooks for CSE Students & Developers",
-  description: "Browse LearnStack PDF handbooks for programming, Docker, Linux, SQL, API development, GitHub, ChatGPT prompts, and more. Practical digital books for students and developers.",
-  path: "/products"
+  title: "Programming Handbooks for Beginners & Developers",
+  description: "Browse LearnStack programming handbooks for beginners, including coding learning resources, React handbook PDFs, SQL, APIs, Git, Docker, and revision guides.",
+  path: "/products",
+  keywords: ["programming handbooks for beginners", "React handbook PDF", "coding learning resources", "PDF handbooks for developers"]
 });
 
 export default async function ProductsPage() {
@@ -20,7 +23,9 @@ export default async function ProductsPage() {
 
   return (
     <PageEntrance variant="fadeUp" stagger>
+      <AnalyticsPageView eventName="catalog_viewed" eventParams={{ catalog: "handbooks" }} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Handbooks", href: "/products" }])} />
+      <JsonLd data={collectionPageJsonLd({ name: "Programming Handbooks for Beginners", description: metadata.description, path: "/products" })} />
 
       <section className={styles.hero}>
         <div className={`container ${styles.heroGrid}`}>
@@ -44,13 +49,13 @@ export default async function ProductsPage() {
         <div className={`container ${styles.sampleCard}`}>
           <div>
             <span className="tag">Sample Preview</span>
-            <h2>Student handbook samples are coming soon.</h2>
+            <h2>Preview selected handbooks before you buy.</h2>
             <p>
-              Existing handbook PDFs will be converted into clean preview samples before download links are added.
+              Open the available sample PDFs to inspect the layout and learning style before choosing a full digital book.
             </p>
           </div>
           <Link href="/free-samples" className="brutalButton">
-            Check Sample Preview Status
+            Browse Free Samples
           </Link>
         </div>
       </section>
@@ -78,7 +83,9 @@ export default async function ProductsPage() {
               <p>Please try again later.</p>
             </div>
           ) : products.length > 0 ? (
-            <ProductCatalog products={products} />
+            <Suspense fallback={<div className={styles.emptyState}>Loading catalog filters...</div>}>
+              <ProductCatalog products={products} enableComparison />
+            </Suspense>
           ) : (
             <div className={styles.emptyState}>
               <h2>No handbooks found yet.</h2>

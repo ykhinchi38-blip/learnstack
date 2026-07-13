@@ -33,8 +33,11 @@ export default function Footer() {
           <h3>Support</h3>
           <ul>
             <li><Link href="/help">Help</Link></li>
+            <li><Link href="/licensing-and-usage">Licensing FAQ</Link></li>
             <li><Link href="/why-learnstack">Why LearnStack</Link></li>
             <li><Link href="/contact">Contact</Link></li>
+            <li><Link href="/for-educators">For Educators</Link></li>
+            <li><Link href="/partner-with-us">Partner With Us</Link></li>
             <li><a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a></li>
             <li><Link href={site.gumroadStore} target="_blank">Gumroad Store</Link></li>
             <li><Link href="/suggest-a-book">Suggest a Book</Link></li>
@@ -47,6 +50,7 @@ export default function Footer() {
             <li><Link href="/terms">Terms</Link></li>
             <li><Link href="/privacy-policy">Privacy Policy</Link></li>
             <li><Link href="/refund-policy">Refund Policy</Link></li>
+            <li><Link href="/licensing-and-usage">Licensing and Usage</Link></li>
           </ul>
         </div>
       </div>

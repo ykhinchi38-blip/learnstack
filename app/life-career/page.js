@@ -2,6 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import PageEntrance from "@/components/PageEntrance";
 import ProductCatalog from "@/components/ProductCatalog";
+import AnalyticsPageView from "@/components/AnalyticsPageView";
 import { getLifeCareerProductsResult } from "@/lib/gumroad";
 import { breadcrumbJsonLd, collectionPageJsonLd, createMetadata } from "@/lib/seo";
 import styles from "./LifeCareerPage.module.css";
@@ -34,6 +35,7 @@ export default async function LifeCareerPage() {
 
   return (
     <PageEntrance variant="fadeUp" stagger>
+      <AnalyticsPageView eventName="catalog_viewed" eventParams={{ catalog: "life-career" }} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Life & Career Playbooks", href: "/life-career" }])} />
       <JsonLd data={collectionPageJsonLd({
         name: "Life & Career Playbooks",

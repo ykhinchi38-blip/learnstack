@@ -5,6 +5,7 @@ import PageEntrance from "@/components/PageEntrance";
 import { getResourceBySlug } from "@/data/resources";
 import { getLifeCareerProductBySlug, getLifeCareerProducts } from "@/lib/gumroad";
 import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
+import { getRelatedProducts } from "@/lib/productCatalog";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }) {
     description: productSeoDescription(product, "life-career"),
     path: `/life-career/${product.slug || params.slug}`,
     image: product.image || product.coverImage || undefined,
+    imageAlt: `${product.title} Life and Career Playbook cover by LearnStack`,
     type: "product"
   });
 }
@@ -42,9 +44,7 @@ export default async function LifeCareerProductDetailPage({ params }) {
   if (!product) notFound();
 
   const productPath = `/life-career/${product.slug || params.slug}`;
-  const relatedProducts = products
-    .filter((item) => item.id !== product.id && item.category === product.category)
-    .slice(0, 3);
+  const relatedProducts = getRelatedProducts(product, products, 3);
   const relatedResources = [
     "how-to-start-coding-as-a-student",
     "learnstack-free-pdf-samples"

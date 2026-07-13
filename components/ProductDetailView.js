@@ -1,9 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import ProductImageGallery from "@/components/ProductImageGallery";
+import StickyPurchaseBar from "@/components/StickyPurchaseBar";
+import { ProductFeedback } from "@/components/ApprovedFeedback";
+import AnalyticsPageView from "@/components/AnalyticsPageView";
+import { TrackedExternalLink } from "@/components/TrackedLinks";
+import TrackedProductPreviewGallery from "@/components/TrackedProductPreviewGallery";
 import { findAmazonBookForProduct } from "@/data/amazonPaperbacks";
 import { brand } from "@/data/brand";
 import { productAudienceLabel, productDetailHref } from "@/lib/productRouting";
+import { formatPrice, getProductPricing, REGIONAL_PRICING_NOTE } from "@/lib/pricing";
+import { hasValidSampleUrl } from "@/lib/sampleMatching";
+import ProductTrustSummary from "@/components/ProductTrustSummary";
 import styles from "./ProductDetailView.module.css";
 
 function normalizeImageKey(value) {
@@ -128,6 +135,17 @@ function readableText(value = "") {
   return String(value || "").replace(/\s+/g, " ").trim();
 }
 
+function productAnalyticsParams(product, ctaLocation) {
+  return {
+    product_id: product.id || product.slug || "",
+    product_title: product.title || "",
+    product_category: product.category || product.audience || "",
+    price: Number(product.price) || undefined,
+    currency: product.currency || "USD",
+    cta_location: ctaLocation
+  };
+}
+
 function getDescriptionParagraphs(product, fallback) {
   const source = product.longDescription || product.description || product.limitedDescription || fallback;
   const blocks = String(source || "")
@@ -148,16 +166,80 @@ function getAudienceCards(product, isKidsBook, isLifeCareerBook) {
   return ["Students", "Beginners", "Self-learners", "Early professionals"];
 }
 
-function getInsideItems(product) {
-  if (Array.isArray(product.whatInside) && product.whatInside.length) {
-    return product.whatInside.map((item) => typeof item === "string" ? item : item?.title).filter(Boolean).slice(0, 6);
+function itemValues(value) {
+  const values = Array.isArray(value) ? value : value ? [value] : [];
+
+  return values
+    .map((item) => typeof item === "string" || typeof item === "number" ? String(item) : item?.title || item?.name || "")
+    .map(readableText)
+    .filter(Boolean);
+}
+
+function uniqueItems(items = []) {
+  return Array.from(new Set(items.map(readableText).filter(Boolean)));
+}
+
+function countFact(value, label, pluralLabel = `${label}s`) {
+  const count = itemValues(value).length;
+  return count ? `${count} ${count === 1 ? label : pluralLabel}` : "";
+}
+
+function getQuickFacts(product, isKidsBook) {
+  const facts = [];
+  const pageCount = product.pageCount || product.pages;
+  const ageRange = product.ageRange || (/^ages?\s/i.test(product.badge || "") ? product.badge : "");
+
+  if (isKidsBook && ageRange) facts.push(`Age range: ${ageRange}`);
+  if (!isKidsBook && (product.skillLevel || product.level)) facts.push(`Skill level: ${product.skillLevel || product.level}`);
+  if (pageCount && pageCount !== "PDF") facts.push(`${pageCount} pages`);
+  if (product.edition && product.edition !== "Latest Edition") facts.push(product.edition);
+  if (product.format) facts.push(product.format);
+
+  if (isKidsBook) {
+    if (product.illustrated || itemValues(product.illustrations).length) facts.push("Illustrated PDF");
+    const themes = itemValues(product.themes);
+    if (themes.length) facts.push(`Themes: ${themes.slice(0, 3).join(", ")}`);
+    const activityFact = countFact(product.activities, "activity", "activities") || countFact(product.coloringPages, "coloring page") || countFact(product.discussionPrompts, "discussion prompt");
+    if (activityFact) facts.push(activityFact);
+  } else {
+    [countFact(product.projects, "project"), countFact(product.examples, "example"), countFact(product.exercises, "exercise"), countFact(product.cheatSheets, "cheat sheet")]
+      .filter(Boolean)
+      .forEach((fact) => facts.push(fact));
   }
 
-  if (Array.isArray(product.chapters) && product.chapters.length) {
-    return product.chapters.map((chapter) => chapter?.title).filter(Boolean).slice(0, 6);
-  }
+  facts.push("Instant digital delivery");
+  return uniqueItems(facts).slice(0, 7);
+}
 
-  return [];
+function getOutcomeItems(product) {
+  const outcomes = Array.isArray(product.outcomes) ? product.outcomes : [];
+
+  return outcomes
+    .map((outcome) => ({
+      title: readableText(outcome?.title),
+      description: readableText(outcome?.description)
+    }))
+    .filter((outcome) => outcome.title.split(/\s+/).filter(Boolean).length >= 2 && outcome.description)
+    .slice(0, 6);
+}
+
+function getIncludedItems(product) {
+  const chapters = itemValues(product.chapters);
+  const specifiedItems = itemValues(product.whatInside);
+  const fileFormat = product.format ? [`File format: ${product.format}`] : [];
+  const labelledItems = [
+    ["Projects", product.projects], ["Examples", product.examples], ["Exercises", product.exercises], ["Cheat sheets", product.cheatSheets],
+    ["Activities", product.activities], ["Coloring pages", product.coloringPages], ["Discussion prompts", product.discussionPrompts], ["Illustrations", product.illustrations]
+  ].flatMap(([label, value]) => itemValues(value).map((item) => `${label}: ${item}`));
+
+  return uniqueItems([...fileFormat, ...specifiedItems, ...chapters, ...labelledItems]).slice(0, 10);
+}
+
+function outcomeHeading({ isKidsBook, isLifeCareerBook, isBundle }) {
+  if (isBundle) return "What You Will Be Able to Build and Understand";
+  if (isKidsBook) return "What This Book Helps Children Explore";
+  if (isLifeCareerBook) return "What You Will Take Away";
+  return "What You Will Learn";
 }
 
 function categoryPurpose(isKidsBook, isLifeCareerBook) {
@@ -172,34 +254,48 @@ function categoryPurpose(isKidsBook, isLifeCareerBook) {
   return "LearnStack handbooks are made for clear, practical, beginner-friendly learning.";
 }
 
-function getProductFaqs(product, isKidsBook, isLifeCareerBook) {
+function getProductFaqs(product, isKidsBook, isLifeCareerBook, hasSamplePreview, hasImagePreview) {
   const categoryFaqs = isKidsBook ? [
     { q: "Is this suitable for children?", a: "LearnStack Kids books are designed with a warm, parent-friendly style for guided learning." },
     { q: "Can parents or teachers use it?", a: "Yes. Parents, teachers, and families can use LearnStack Kids books for guided reading and activities." },
     { q: "What format do I get?", a: "You receive a digital PDF through Gumroad email after purchase." },
     { q: "How do I receive the PDF?", a: "After purchase, Gumroad sends the download email to the address used at checkout." },
-    { q: "Can I preview it?", a: product.sampleUrl ? "Yes. A free sample is available before buying." : "Sample preview coming soon." },
+    ...(hasSamplePreview ? [{ q: "Can I preview it?", a: "Yes. A free sample is available before buying." }] : []),
     { q: "What if my file does not download?", a: `Contact ${brand.contactEmail} within 3 days for genuine file or download issues.` }
   ] : isLifeCareerBook ? [
     { q: "Is this book for students or young professionals?", a: "Yes. LearnStack Life & Career Playbooks are made for students, young adults, early professionals, self-learners, and career-focused readers." },
     { q: "What format do I get?", a: "You receive a digital PDF through Gumroad email after purchase." },
     { q: "How do I receive the PDF?", a: "After purchase, Gumroad sends the download email to the address used at checkout." },
     { q: "Can I use it for self-study?", a: "Yes. The playbooks are designed for practical self-study, reflection, and clear next steps." },
-    { q: "Is a sample available?", a: product.sampleUrl ? "Yes. A free sample is available before buying." : "Sample preview coming soon." },
+    ...(hasSamplePreview ? [{ q: "Is a sample available?", a: "Yes. A free sample is available before buying." }] : []),
     { q: "What if my file does not download?", a: `Contact ${brand.contactEmail} within 3 days for genuine file or download issues.` }
   ] : [
     { q: "Is this beginner-friendly?", a: "LearnStack handbooks are made for students, beginners, self-learners, developers, and early professionals." },
     { q: "What format do I get?", a: "You receive a digital PDF through Gumroad email after purchase." },
     { q: "How do I receive the PDF?", a: "After purchase, Gumroad sends the download email to the address used at checkout." },
     { q: "Can I use it for self-study?", a: "Yes. LearnStack handbooks are designed for practical self-study and guided revision." },
-    { q: "Can I preview it?", a: product.sampleUrl ? "Yes. A free sample is available before buying." : "Sample preview coming soon." },
+    ...(hasSamplePreview ? [{ q: "Can I preview it?", a: "Yes. A free sample is available before buying." }] : []),
     { q: "What if my file does not download?", a: `Contact ${brand.contactEmail} within 3 days for genuine file or download issues.` }
   ];
 
   const productFaqs = Array.isArray(product.faqs) ? product.faqs.filter((faq) => faq?.q && faq?.a) : [];
   const seen = new Set();
 
-  return [...productFaqs, ...categoryFaqs].filter((faq) => {
+  const pricingFaq = {
+    q: "Can regional pricing apply at checkout?",
+    a: REGIONAL_PRICING_NOTE
+  };
+  const reusableFaqs = [
+    { q: "Is this a digital product?", a: "Yes. This product is delivered as a digital PDF through Gumroad." },
+    { q: "How will I receive it?", a: "After purchase, Gumroad sends the download link to the email address used at checkout." },
+    { q: "Is a preview available?", a: hasSamplePreview ? "Yes. A free sample PDF is available before purchase." : hasImagePreview ? "Yes. Preview pages are available on this product page." : "A preview is not currently available for this title." },
+    { q: "Is regional pricing available?", a: REGIONAL_PRICING_NOTE },
+    { q: "Can I print the PDF?", a: "You may print a purchased PDF for your personal use. Please do not redistribute the file or printed copies." },
+    ...(isKidsBook ? [{ q: "Can teachers use it in classrooms?", a: "Teachers can use a purchased copy for guided reading or activities. Contact LearnStack for wider-use or sharing questions." }] : []),
+    { q: "What should I do if the download link does not work?", a: `Contact ${brand.contactEmail} with your Gumroad order email and book name within 3 days.` }
+  ];
+
+  return [...reusableFaqs, ...productFaqs, ...categoryFaqs, pricingFaq].filter((faq) => {
     const key = faq.q.toLowerCase();
     if (seen.has(key)) return false;
     seen.add(key);
@@ -231,35 +327,27 @@ function ProductImage({ src, title, className, alt, width = 720, height = 960, p
   );
 }
 
-function PreviewPanel({ product, previewImages }) {
+function PreviewPanel({ product, previewImages, hasSamplePreview }) {
+  if (!hasSamplePreview && previewImages.length === 0) return null;
+
   const samplePageCount = product.sample?.samplePageCount;
-  const samplePageLabel = samplePageCount
+  const samplePageLabel = hasSamplePreview && samplePageCount
     ? `${samplePageCount} preview ${samplePageCount === 1 ? "page" : "pages"}`
-    : "Free preview PDF";
+    : hasSamplePreview ? "Free preview PDF" : "Preview pages";
 
   return (
     <section className={styles.previewCard} aria-labelledby="preview-card-heading">
       <div>
-        <h2 id="preview-card-heading">{product.sampleUrl ? "Free sample available" : "Sample preview coming soon"}</h2>
-        <p>
-          {product.sampleUrl
-            ? "Preview the book before purchasing the full digital PDF."
-            : "A clean preview sample will appear here when it is ready."}
-        </p>
-        {product.sampleUrl && <span className={styles.sampleMeta}>{samplePageLabel}</span>}
+        <h2 id="preview-card-heading">{hasSamplePreview ? "Free sample available" : "Preview pages"}</h2>
+        <p>{hasSamplePreview ? "Preview the book before purchasing the full digital PDF." : "Explore the available preview pages before purchasing the full digital PDF."}</p>
+        <span className={styles.sampleMeta}>{samplePageLabel}</span>
       </div>
 
-      {product.sampleUrl && (
-        <a href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.textButton}>
-          View Free Sample
-        </a>
-      )}
+      {hasSamplePreview && <TrackedExternalLink href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.textButton} eventName="preview_opened" eventParams={productAnalyticsParams(product, "product_preview_panel")}>View Free Sample</TrackedExternalLink>}
 
       {previewImages.length > 0 ? (
-        <ProductImageGallery images={previewImages} title={product.title} />
-      ) : (
-        <p className={styles.previewEmpty}>Preview images coming soon.</p>
-      )}
+        <TrackedProductPreviewGallery product={product} images={previewImages} />
+      ) : null}
     </section>
   );
 }
@@ -282,7 +370,7 @@ function RelatedBookCard({ item }) {
       <div>
         <span>{productAudienceLabel(item)}</span>
         <h3>{item.title}</h3>
-        {item.priceDisplay && <p>{item.priceDisplay}</p>}
+        <p>{formatPrice(item)}</p>
         <Link href={productDetailHref(item)} className={styles.textButton}>
           Details
         </Link>
@@ -301,26 +389,69 @@ function RelatedResourceCard({ resource }) {
   );
 }
 
-export default function ProductDetailView({ product, catalogHref, catalogLabel, eyebrow, relatedProducts = [], relatedResources = [] }) {
+function BundleIncludedBook({ item }) {
+  const cover = item.image || item.coverImage;
+  const hasPreview = hasValidSampleUrl(item);
+
+  return (
+    <article className={styles.relatedBookCard}>
+      <div className={styles.relatedCover}>
+        <ProductImage
+          src={cover}
+          title={item.title}
+          alt={`${item.title} cover by LearnStack`}
+          className={styles.relatedCoverImage}
+          width={180}
+          height={240}
+        />
+      </div>
+      <div>
+        <span>{productAudienceLabel(item)}</span>
+        <h3>{item.title}</h3>
+        <p>{formatPrice(item)}</p>
+        {item.summary && <p className={styles.bundlePurpose}>{item.summary}</p>}
+        <div className={styles.bundleCardLinks}>
+          <Link href={productDetailHref(item)} className={styles.textButton}>Details</Link>
+          {hasPreview && <a href={item.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.textButton}>Preview</a>}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default function ProductDetailView({ product, catalogHref, catalogLabel, eyebrow, relatedProducts = [], relatedResources = [], bundleDetails = null, excludedProductIds = [] }) {
   const coverImage = product.image || product.coverImage;
   const previewImages = getProductPreviewImages(product);
+  const hasSamplePreview = hasValidSampleUrl(product);
+  const hasImagePreview = previewImages.length > 0;
   const amazonBook = findAmazonBookForProduct(product);
   const amazonUrl = amazonBook?.amazonUrl || product.amazonUrl;
   const isKidsBook = product.audience === "kids";
   const isLifeCareerBook = product.audience === "life-career";
+  const isBundle = Boolean(product.isBundle || product.audience === "bundle");
   const summary = readableText(product.summary || product.tagline || "A LearnStack digital book designed for simple and practical learning.");
   const descriptionParagraphs = getDescriptionParagraphs(product, summary);
   const audienceCards = getAudienceCards(product, isKidsBook, isLifeCareerBook);
-  const insideItems = getInsideItems(product);
-  const faqs = getProductFaqs(product, isKidsBook, isLifeCareerBook);
+  const quickFacts = getQuickFacts(product, isKidsBook);
+  const outcomeItems = getOutcomeItems(product);
+  const insideItems = getIncludedItems(product);
+  const faqs = getProductFaqs(product, isKidsBook, isLifeCareerBook, hasSamplePreview, hasImagePreview);
   const themeClass = isKidsBook ? styles.kidsTheme : isLifeCareerBook ? styles.lifeTheme : styles.handbookTheme;
   const categoryLabel = productAudienceLabel(product);
-  const sampleStatus = product.sampleUrl ? "Free sample available" : "Sample preview coming soon";
-  const relatedBooks = relatedProducts.slice(0, 4);
+  const sampleStatus = hasSamplePreview || hasImagePreview ? "Preview available" : "Digital PDF edition";
+  const pricing = getProductPricing(product);
+  const hasStickyPurchase = pricing.pricingType === "fixed" && Boolean(product.gumroadUrl);
+  const relatedBooks = relatedProducts
+    .filter((item) => item?.id !== product.id && !excludedProductIds.includes(item?.id) && !item?.deleted && !item?.hidden && !item?.unavailable && (item?.status || "published") === "published")
+    .slice(0, 3);
   const resources = relatedResources.slice(0, 3);
+  const bundleDefinition = bundleDetails?.definition;
+  const viewEventName = product.isBundle ? "bundle_viewed" : "product_viewed";
+  const buyEventName = product.isBundle ? "bundle_buy_clicked" : "gumroad_buy_clicked";
 
   return (
-    <main className={`${styles.page} ${themeClass}`}>
+    <main className={`${styles.page} ${themeClass} ${hasStickyPurchase ? styles.withStickyPurchase : ""}`}>
+      <AnalyticsPageView eventName={viewEventName} eventParams={productAnalyticsParams(product, "product_page")} />
       <section className={styles.heroSection}>
         <nav className={`container ${styles.breadcrumbBar}`} aria-label="Breadcrumb">
           <Link href="/">Home</Link>
@@ -347,7 +478,7 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
               <span>{sampleStatus}</span>
             </div>
 
-            <PreviewPanel product={product} previewImages={previewImages} />
+            <PreviewPanel product={product} previewImages={previewImages} hasSamplePreview={hasSamplePreview} />
           </div>
 
           <div className={styles.heroContent}>
@@ -358,25 +489,25 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
             <div className={styles.purchaseCard}>
               <div className={styles.priceRow}>
                 <span>Digital PDF</span>
-                <strong>{product.priceDisplay || "View price"}</strong>
+                <strong>{formatPrice(product)}</strong>
               </div>
 
               <div className={styles.formatBadges}>
                 <span>{product.format || "Digital PDF"}</span>
                 <span>{categoryLabel}</span>
-                <span>Delivered by Gumroad</span>
+                <span>Secure checkout through Gumroad</span>
               </div>
 
+              <ProductTrustSummary product={product} />
+
               <div className={styles.heroButtons}>
-                <a href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className={`brutalButton ${styles.primaryCta}`}>
+                <TrackedExternalLink href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className={`brutalButton ${styles.primaryCta}`} eventName={buyEventName} eventParams={productAnalyticsParams(product, "product_hero")}>
                   Buy Digital PDF
-                </a>
-                {product.sampleUrl ? (
-                  <a href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={`brutalButton brutalButtonWhite ${styles.secondaryCta}`}>
+                </TrackedExternalLink>
+                {hasSamplePreview && (
+                  <TrackedExternalLink href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={`brutalButton brutalButtonWhite ${styles.secondaryCta}`} eventName="preview_opened" eventParams={productAnalyticsParams(product, "product_hero")}>
                     View Free Sample
-                  </a>
-                ) : (
-                  <span className={styles.disabledButton}>Sample preview coming soon</span>
+                  </TrackedExternalLink>
                 )}
                 {amazonUrl && (
                   <a href={amazonUrl} target="_blank" rel="noopener noreferrer" className={`brutalButton brutalButtonWhite ${styles.secondaryCta}`}>
@@ -386,11 +517,13 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
               </div>
 
               <div className={styles.purchaseNotes}>
-                <p>Digital PDF is delivered after purchase through Gumroad email.</p>
+                <p>Secure checkout through Gumroad. Your digital PDF is delivered by email after purchase.</p>
                 <p>
-                  Download issue? Contact{" "}
+                  Support is available for genuine delivery issues. Read the{" "}
+                  <Link href="/refund-policy">refund and download policy</Link> or contact{" "}
                   <a href={`mailto:${brand.contactEmail}`}>{brand.contactEmail}</a> within 3 days.
                 </p>
+                <p>Preview available on selected products. <Link href="/help">Visit the Help Center</Link> for delivery and checkout guidance.</p>
               </div>
             </div>
           </div>
@@ -409,7 +542,7 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
 
           <article className={styles.contentCard}>
             <span className={styles.sectionKicker}>Readers</span>
-            <h2>Who this is for</h2>
+            <h2>Who This Is For</h2>
             <div className={styles.audienceGrid}>
               {audienceCards.map((item) => (
                 <span key={item}>{item}</span>
@@ -417,34 +550,115 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
             </div>
           </article>
 
-          <article className={styles.contentCard}>
-            <span className={styles.sectionKicker}>Contents</span>
-            <h2>Inside this book</h2>
-            {insideItems.length > 0 ? (
+          {quickFacts.length > 0 && (
+            <article className={styles.contentCard}>
+              <span className={styles.sectionKicker}>Quick facts</span>
+              <h2>At a glance</h2>
+              <div className={styles.audienceGrid}>
+                {quickFacts.map((fact) => <span key={fact}>{fact}</span>)}
+              </div>
+            </article>
+          )}
+
+          {outcomeItems.length > 0 && (
+            <article className={`${styles.contentCard} ${styles.wideCard}`}>
+              <span className={styles.sectionKicker}>Outcomes</span>
+              <h2>{outcomeHeading({ isKidsBook, isLifeCareerBook, isBundle })}</h2>
+              <div className={styles.outcomeGrid}>
+                {outcomeItems.map((item, index) => (
+                  <article className={styles.outcomeCard} key={item.title}>
+                    <span aria-hidden="true">{index + 1}</span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.description}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </article>
+          )}
+
+          {insideItems.length > 0 && (
+            <article className={styles.contentCard}>
+              <span className={styles.sectionKicker}>Contents</span>
+              <h2>What Is Included</h2>
               <ul className={styles.insideList}>
                 {insideItems.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-            ) : (
-              <p>Detailed inside preview will be added soon.</p>
-            )}
-          </article>
+            </article>
+          )}
 
-          <article className={styles.contentCard}>
-            <span className={styles.sectionKicker}>Preview</span>
-            <h2>Preview before buying</h2>
-            <p>
-              {product.sampleUrl
-                ? "Open the free sample PDF before choosing the full LearnStack book."
-                : "Sample preview coming soon."}
-            </p>
-            {product.sampleUrl && (
-              <a href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.textButton}>
+          {bundleDefinition && (
+            <article className={`${styles.contentCard} ${styles.wideCard}`}>
+              <span className={styles.sectionKicker}>Bundle guide</span>
+              <h2>Who this bundle is for</h2>
+              <div className={styles.bundleFacts}>
+                <div>
+                  <h3>Ideal audience</h3>
+                  <p>{bundleDefinition.idealAudience}</p>
+                </div>
+                <div>
+                  <h3>Prerequisites</h3>
+                  <p>{bundleDefinition.prerequisites}</p>
+                </div>
+              </div>
+            </article>
+          )}
+
+          {bundleDetails?.includedProducts.length > 0 && (
+            <section className={`${styles.contentCard} ${styles.wideCard}`} aria-labelledby="included-books-heading">
+              <span className={styles.sectionKicker}>Included books</span>
+              <h2 id="included-books-heading">Everything included in this bundle</h2>
+              <div className={styles.relatedBooksGrid}>
+                {bundleDetails.includedProducts.map((item) => <BundleIncludedBook item={item} key={item.id} />)}
+              </div>
+            </section>
+          )}
+
+          {bundleDefinition && bundleDetails?.learningOrder.length > 0 && (
+            <article className={`${styles.contentCard} ${styles.wideCard}`}>
+              <span className={styles.sectionKicker}>Learning path</span>
+              <h2>Recommended learning order</h2>
+              <ol className={styles.insideList}>
+                {bundleDetails.learningOrder.map((title) => <li key={title}>{title}</li>)}
+              </ol>
+            </article>
+          )}
+
+          {bundleDetails?.includedProducts.length > 0 && bundleDetails.bundlePrice !== null && (
+            <section className={`${styles.contentCard} ${styles.wideCard}`} aria-labelledby="bundle-comparison-heading">
+              <span className={styles.sectionKicker}>Bundle value</span>
+              <h2 id="bundle-comparison-heading">Compare your options</h2>
+              <div className={styles.bundleComparison}>
+                <article>
+                  <h3>Buy Individually</h3>
+                  <ul>
+                    {bundleDetails.includedProducts.map((item) => <li key={item.id}>{item.title} <span>{formatPrice(item)}</span></li>)}
+                  </ul>
+                  {bundleDetails.individualValue !== null && <strong>Total current price: {formatPrice(bundleDetails.individualValue)}</strong>}
+                </article>
+                <article>
+                  <h3>Get the Bundle</h3>
+                  <p>All included products in one bundle.</p>
+                  <strong>Bundle price: {formatPrice(bundleDetails.bundlePrice)}</strong>
+                  {bundleDetails.savings !== null && <em>Exact savings: {formatPrice(bundleDetails.savings)} ({bundleDetails.savingsPercentage.toFixed(1)}%)</em>}
+                </article>
+              </div>
+            </section>
+          )}
+
+          {hasSamplePreview && (
+            <article className={styles.contentCard}>
+              <span className={styles.sectionKicker}>Preview</span>
+              <h2>Preview before buying</h2>
+              <p>Open the free sample PDF before choosing the full LearnStack book.</p>
+              <TrackedExternalLink href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.textButton} eventName="preview_opened" eventParams={productAnalyticsParams(product, "product_content") }>
                 View Free Sample
-              </a>
-            )}
-          </article>
+              </TrackedExternalLink>
+            </article>
+          )}
 
           <article className={styles.contentCard}>
             <span className={styles.sectionKicker}>Formats</span>
@@ -467,6 +681,12 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
             <p>{categoryPurpose(isKidsBook, isLifeCareerBook)}</p>
           </article>
 
+          <ProductFeedback
+            productId={product.id}
+            productIds={[product.slug]}
+            className={`${styles.contentCard} ${styles.wideCard}`}
+          />
+
           <section className={`${styles.contentCard} ${styles.wideCard}`} aria-labelledby="product-faq-heading">
             <span className={styles.sectionKicker}>Questions</span>
             <h2 id="product-faq-heading">FAQ</h2>
@@ -478,6 +698,9 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
                 </article>
               ))}
             </div>
+            <p className={styles.faqLinks}>
+              Need usage or classroom guidance? <Link href="/licensing-and-usage">Read the licensing FAQ</Link>. For delivery and payment support, see the <Link href="/refund-policy">refund and download policy</Link>.
+            </p>
           </section>
 
           {relatedBooks.length > 0 && (
@@ -511,13 +734,13 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
               <p>Checkout happens on Gumroad, and the download link is sent to your email after purchase.</p>
             </div>
             <div className={styles.finalButtons}>
-              <a href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className="brutalButton">
+              <TrackedExternalLink href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className="brutalButton" eventName={buyEventName} eventParams={productAnalyticsParams(product, "product_final_cta")}>
                 Buy Digital PDF
-              </a>
-              {product.sampleUrl && (
-                <a href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className="brutalButton brutalButtonWhite">
+              </TrackedExternalLink>
+              {hasSamplePreview && (
+                <TrackedExternalLink href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className="brutalButton brutalButtonWhite" eventName="preview_opened" eventParams={productAnalyticsParams(product, "product_final_cta")}>
                   View Free Sample
-                </a>
+                </TrackedExternalLink>
               )}
               {amazonUrl && (
                 <a href={amazonUrl} target="_blank" rel="noopener noreferrer" className="brutalButton brutalButtonWhite">
@@ -528,6 +751,7 @@ export default function ProductDetailView({ product, catalogHref, catalogLabel, 
           </section>
         </div>
       </section>
+      <StickyPurchaseBar product={product} />
     </main>
   );
 }

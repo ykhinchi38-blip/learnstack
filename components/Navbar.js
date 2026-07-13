@@ -26,6 +26,8 @@ const moreLinks = [
   { href: "/story", label: "Our Story" },
   { href: "/amazon-special", label: "Amazon Special" },
   { href: "/suggest-a-book", label: "Suggest a Book" },
+  { href: "/for-educators", label: "For Educators" },
+  { href: "/partner-with-us", label: "Partner With Us" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms", label: "Terms" },
   { href: "/refund-policy", label: "Refund Policy" }
@@ -116,7 +118,7 @@ function SearchDropdown({ query, results, onSelect }) {
   );
 }
 
-function SearchBox({ id, query, setQuery, results, onSubmit, onSelect, mobile = false, placeholder = "Search handbooks...", icon = "search" }) {
+function SearchBox({ id, query, setQuery, results, onSubmit, onSelect, mobile = false, placeholder = "Search LearnStack books...", icon = "search" }) {
   const [focused, setFocused] = useState(false);
   const showDropdown = mobile || focused;
 
@@ -126,7 +128,7 @@ function SearchBox({ id, query, setQuery, results, onSubmit, onSelect, mobile = 
       role="search"
       onSubmit={onSubmit}
     >
-      <label className="visuallyHidden" htmlFor={id}>Search handbooks</label>
+      <label className="visuallyHidden" htmlFor={id}>Search LearnStack books</label>
       <span className={styles.searchIcon}>
         <SearchIcon variant={icon} />
       </span>
@@ -319,7 +321,7 @@ export default function Navbar() {
             results={searchResults}
             onSubmit={handleSearchSubmit}
             onSelect={closeMenus}
-            placeholder={isKidsRoute ? "Search kids books..." : "Search handbooks..."}
+            placeholder={isKidsRoute ? "Search kids books..." : "Search LearnStack books..."}
             icon={isKidsRoute ? "star" : "search"}
           />
         </div>
@@ -360,7 +362,7 @@ export default function Navbar() {
             results={searchResults}
             onSubmit={handleSearchSubmit}
             onSelect={closeMenus}
-            placeholder={isKidsRoute ? "Search kids books..." : "Search handbooks..."}
+            placeholder={isKidsRoute ? "Search kids books..." : "Search LearnStack books..."}
             icon={isKidsRoute ? "star" : "search"}
             mobile
           />

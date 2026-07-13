@@ -5,6 +5,7 @@ import PageEntrance from "@/components/PageEntrance";
 import { getResourceBySlug } from "@/data/resources";
 import { getRegularProductBySlug, getRegularProducts } from "@/lib/gumroad";
 import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
+import { getRelatedProducts } from "@/lib/productCatalog";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }) {
     description: productSeoDescription(product, "regular"),
     path: `/products/${product.slug || params.slug}`,
     image: product.image || product.coverImage || undefined,
+    imageAlt: `${product.title} handbook cover by LearnStack`,
     type: "product"
   });
 }
@@ -42,9 +44,7 @@ export default async function ProductDetailPage({ params }) {
   if (!product) notFound();
 
   const productPath = `/products/${product.slug || params.slug}`;
-  const relatedProducts = products
-    .filter((item) => item.id !== product.id && item.category === product.category)
-    .slice(0, 3);
+  const relatedProducts = getRelatedProducts(product, products, 3);
   const relatedResources = [
     "best-pdf-handbooks-for-cse-students",
     "best-coding-books-for-beginners-2026",

@@ -4,43 +4,46 @@ import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import styles from "./PolicyPage.module.css";
 
 export const metadata = createMetadata({
-  title: "Refund Policy",
-  description: "Understand LearnStack refund and support policy for digital PDF handbooks purchased through Gumroad checkout.",
+  title: "Refund and Download-Issue Policy",
+  description: "Understand LearnStack support for delivery, corrupted-file, and duplicate-payment issues with digital PDFs purchased through Gumroad.",
   path: "/refund-policy"
 });
 
 export default function PolicyPage() {
   return (
     <PageEntrance variant="fadeUp">
-      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Refund Policy", href: "/refund-policy" }])} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "Refund and Download-Issue Policy", href: "/refund-policy" }])} />
       <section className="pageHero">
         <div className="container">
           <span className="pageEyebrow">Trust</span>
-          <h1 className="pageTitle">Refund Policy</h1>
-          <p className="pageLead">Last updated: June 23, 2026. This policy explains how LearnStack handles digital PDF purchase issues.</p>
+          <h1 className="pageTitle">Refund and Download-Issue Policy</h1>
+          <p className="pageLead">This policy explains how LearnStack handles genuine delivery, file, and duplicate-payment issues for digital PDF purchases.</p>
         </div>
       </section>
 
       <section className={styles.section}>
         <div className={`container ${styles.card}`}>
-          <h2>Digital product refund policy</h2>
+          <h2>Digital product support policy</h2>
 
           <h3>1. Digital downloads</h3>
           <p>LearnStack handbooks are digital PDF products delivered through Gumroad. Because digital files can be accessed immediately, refunds are reviewed carefully and may not be available once a file has been downloaded, used, or shared.</p>
 
-          <h3>2. When we can help</h3>
-          <p>Contact us if you purchased the wrong product by mistake, were charged twice, cannot access your download, received a broken file, or believe the product description was materially incorrect. We will try to fix the issue first by restoring access, replacing the file, or clarifying the order.</p>
+          <h3>2. Change-of-mind requests</h3>
+          <p>A change of mind, a completed download with no file problem, or not reviewing the product details before purchase does not automatically qualify for a refund. LearnStack does not promise refunds for every digital purchase.</p>
 
-          <h3>3. Refund window</h3>
-          <p>Please contact support within 7 days of purchase with your order email, product name, Gumroad receipt, and a short explanation. Refunds are handled case by case and may be processed through Gumroad where eligible.</p>
+          <h3>3. Genuine delivery and payment issues</h3>
+          <p>Contact LearnStack if you cannot access your download, received a corrupted file, were charged twice, or believe there is a genuine delivery problem. We will review the order and try to restore access, replace a faulty file, or clarify the purchase before considering any refund.</p>
 
-          <h3>4. No refund for misuse</h3>
-          <p>Refunds may be refused if there is evidence of file sharing, redistribution, repeated refund abuse, a completed download with no product issue, or a request based only on not reading the product details before purchase.</p>
+          <h3>4. What to include</h3>
+          <p>Please contact support within 3 days of a download problem with the email used for the Gumroad order, product name, Gumroad receipt where available, and a short explanation of what happened.</p>
 
-          <h3>5. Legal rights</h3>
+          <h3>5. Refund decisions</h3>
+          <p>Refunds are reviewed case by case and may be processed through Gumroad where eligible. Refunds may be refused where there is evidence of sharing, redistribution, repeated refund abuse, or no genuine product, delivery, or duplicate-payment issue.</p>
+
+          <h3>6. Legal rights</h3>
           <p>Nothing in this policy is intended to remove any consumer rights that apply by law. If local law requires a different process, LearnStack will follow the applicable requirement.</p>
 
-          <h3>6. Support contact</h3>
+          <h3>7. Support contact</h3>
           <p>Use the support email in the footer and include enough order information for us to find your purchase quickly.</p>
         </div>
       </section>

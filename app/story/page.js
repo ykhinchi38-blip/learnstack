@@ -81,7 +81,7 @@ function StoryImage({ src, alt, title }) {
     return (
       <div className={styles.imageFallback} role="img" aria-label={`${title} image placeholder`}>
         <span>{title}</span>
-        <small>Image coming soon</small>
+        <small>LearnStack story visual</small>
       </div>
     );
   }

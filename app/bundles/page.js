@@ -1,9 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
+import AnalyticsPageView from "@/components/AnalyticsPageView";
 import PageEntrance from "@/components/PageEntrance";
-import { getBundleProductsResult } from "@/lib/gumroad";
+import { TrackedExternalLink } from "@/components/TrackedLinks";
+import { getAllProducts, getBundleProductsResult } from "@/lib/gumroad";
+import { getBundleDetails } from "@/lib/bundleDetails";
 import { productDetailHref } from "@/lib/productRouting";
+import { formatPrice } from "@/lib/pricing";
+import RegionalPricingNotice from "@/components/RegionalPricingNotice";
 import { breadcrumbJsonLd, collectionPageJsonLd, createMetadata } from "@/lib/seo";
 import styles from "./BundlesPage.module.css";
 
@@ -14,6 +19,17 @@ export const metadata = createMetadata({
   description: "Explore LearnStack digital book bundles for students, coding beginners, interview preparation, web development, and practical learning.",
   path: "/bundles"
 });
+
+function bundleEventParams(bundle, ctaLocation) {
+  return {
+    product_id: bundle.id || bundle.slug || "",
+    product_title: bundle.title || "",
+    product_category: bundle.category || "bundles",
+    price: Number(bundle.price) || undefined,
+    currency: bundle.currency || "USD",
+    cta_location: ctaLocation
+  };
+}
 
 function BundleCover({ bundle, priority = false }) {
   const coverImage = bundle.image || bundle.coverImage;
@@ -40,7 +56,7 @@ function BundleCover({ bundle, priority = false }) {
   );
 }
 
-function BundleCard({ bundle, priority = false }) {
+function BundleCard({ bundle, details, priority = false }) {
   const detailHref = productDetailHref(bundle);
 
   return (
@@ -52,16 +68,23 @@ function BundleCard({ bundle, priority = false }) {
       <div className={styles.cardBody}>
         <h2>{bundle.title}</h2>
         <p>{bundle.summary || bundle.limitedDescription || "A curated LearnStack digital learning bundle."}</p>
-        <strong>{bundle.priceDisplay || "View price"}</strong>
+        <div className={styles.cardMeta}>
+          {details.includedProducts.length > 0 && <span className={styles.includedCount}>{details.includedProducts.length} included {details.includedProducts.length === 1 ? "book" : "books"}</span>}
+          <strong>{formatPrice(bundle)}</strong>
+          <RegionalPricingNotice product={bundle} />
+          {details.savings !== null && (
+            <span className={styles.savings}>Save {formatPrice(details.savings)} ({details.savingsPercentage.toFixed(1)}%)</span>
+          )}
+        </div>
         <div className={styles.cardActions}>
           <Link href={detailHref} className={styles.detailsButton}>Details</Link>
-          <a href={bundle.gumroadUrl} target="_blank" rel="noopener noreferrer" className={styles.buyButton}>
+          <TrackedExternalLink href={bundle.gumroadUrl} target="_blank" rel="noopener noreferrer" className={styles.buyButton} eventName="bundle_buy_clicked" eventParams={bundleEventParams(bundle, "bundle_catalog")}>
             Buy on Gumroad
-          </a>
+          </TrackedExternalLink>
           {bundle.sampleUrl && (
-            <a href={bundle.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleButton}>
+            <TrackedExternalLink href={bundle.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleButton} eventName="preview_opened" eventParams={bundleEventParams(bundle, "bundle_catalog")}>
               Free Sample
-            </a>
+            </TrackedExternalLink>
           )}
         </div>
       </div>
@@ -70,10 +93,20 @@ function BundleCard({ bundle, priority = false }) {
 }
 
 export default async function BundlesPage() {
-  const { products: bundles, error } = await getBundleProductsResult();
+  const [{ products: bundleProducts, error }, products] = await Promise.all([
+    getBundleProductsResult(),
+    getAllProducts()
+  ]);
+  const bundles = bundleProducts.filter((bundle) => (
+    !bundle.deleted &&
+    !bundle.hidden &&
+    !bundle.unavailable &&
+    !/(draft|archived|deleted|hidden|unavailable)/i.test(String(bundle.status || "published"))
+  ));
 
   return (
     <PageEntrance variant="fadeUp" stagger>
+      <AnalyticsPageView eventName="catalog_viewed" eventParams={{ catalog: "bundles" }} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", href: "/" }, { name: "LearnStack Book Bundles", href: "/bundles" }])} />
       <JsonLd data={collectionPageJsonLd({
         name: "LearnStack Book Bundles",
@@ -102,7 +135,7 @@ export default async function BundlesPage() {
           ) : bundles.length > 0 ? (
             <div className={styles.bundleGrid}>
               {bundles.map((bundle, index) => (
-                <BundleCard bundle={bundle} key={bundle.id} priority={index < 3} />
+                <BundleCard bundle={bundle} details={getBundleDetails(bundle, products)} key={bundle.id} priority={index < 3} />
               ))}
             </div>
           ) : (

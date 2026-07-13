@@ -114,6 +114,12 @@
   line-height: 1;
 }
 
+.priceInfo {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
 .metaRow a {
   display: inline-flex;
   align-items: center;

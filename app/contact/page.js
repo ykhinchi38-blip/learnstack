@@ -1,4 +1,5 @@
 import JsonLd from "@/components/JsonLd";
+import Link from "next/link";
 import { createMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import styles from "./ContactPage.module.css";
@@ -27,10 +28,13 @@ export default function ContactPage() {
             <label>Email<input type="email" name="email" placeholder="you@example.com" required /></label>
             <label>Subject
               <select name="subject" required>
-                <option value="Support">Support</option>
-                <option value="Product Question">Product Question</option>
+                <option value="Purchase support">Purchase support</option>
+                <option value="Download issue">Download issue</option>
+                <option value="Product question">Product question</option>
+                <option value="Educator inquiry">Educator inquiry</option>
                 <option value="Partnership">Partnership</option>
-                <option value="Feedback">Feedback</option>
+                <option value="Bulk access">Bulk access</option>
+                <option value="Other">Other</option>
               </select>
             </label>
             <label>Message<textarea name="message" rows="7" placeholder="Write your message..." required /></label>
@@ -39,7 +43,10 @@ export default function ContactPage() {
           <aside className={styles.infoBox}>
             <span className="tag">Support</span>
             <h2>We keep support simple.</h2>
-            <p>Email us for purchase help, download issues, or feedback.</p>
+            <p>Use this form for purchase help, download issues, product questions, and general inquiries. Partnership and group-access requests can use the dedicated partnership form.</p>
+            <Link href="/partner-with-us">Partnership or affiliate request</Link>
+            <Link href="/help">Visit the Help Center</Link>
+            <Link href="/refund-policy">Refund and download policy</Link>
             <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>
             <a href={site.gumroadStore} target="_blank" rel="noopener noreferrer">Open Gumroad Store &rarr;</a>
           </aside>

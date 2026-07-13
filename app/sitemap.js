@@ -1,5 +1,5 @@
 import { getBundleProducts, getKidsProducts, getLifeCareerProducts, getRegularProducts } from "@/lib/gumroad";
-import { absoluteUrl } from "@/lib/seo";
+import { absoluteUrl, isPublicProduct } from "@/lib/seo";
 import localProducts, { slugify } from "@/data/products";
 import { resources } from "@/data/resources";
 
@@ -10,13 +10,13 @@ export default async function sitemap() {
   const liveKidsProducts = await getKidsProducts();
   const liveLifeCareerProducts = await getLifeCareerProducts();
   const liveBundleProducts = await getBundleProducts();
-  const localRegularProducts = localProducts.filter((product) => (product.audience || "regular") === "regular");
-  const localKidsProducts = localProducts.filter((product) => product.audience === "kids");
-  const localLifeCareerProducts = localProducts.filter((product) => product.audience === "life-career");
-  const products = [...liveProducts, ...localRegularProducts];
-  const kidsProducts = [...liveKidsProducts, ...localKidsProducts];
-  const lifeCareerProducts = [...liveLifeCareerProducts, ...localLifeCareerProducts];
-  const bundleProducts = liveBundleProducts;
+  const localRegularProducts = localProducts.filter((product) => (product.audience || "regular") === "regular" && isPublicProduct(product));
+  const localKidsProducts = localProducts.filter((product) => product.audience === "kids" && isPublicProduct(product));
+  const localLifeCareerProducts = localProducts.filter((product) => product.audience === "life-career" && isPublicProduct(product));
+  const products = [...liveProducts, ...localRegularProducts].filter(isPublicProduct);
+  const kidsProducts = [...liveKidsProducts, ...localKidsProducts].filter(isPublicProduct);
+  const lifeCareerProducts = [...liveLifeCareerProducts, ...localLifeCareerProducts].filter(isPublicProduct);
+  const bundleProducts = liveBundleProducts.filter(isPublicProduct);
   const now = new Date();
 
   const staticRoutes = [
@@ -27,6 +27,8 @@ export default async function sitemap() {
     "/kids/books",
     "/resources",
     "/free-samples",
+    "/for-educators",
+    "/partner-with-us",
     "/story",
     "/suggest-a-book",
     "/why-learnstack",
@@ -40,7 +42,8 @@ export default async function sitemap() {
     "/contact",
     "/privacy-policy",
     "/terms",
-    "/refund-policy"
+    "/refund-policy",
+    "/licensing-and-usage"
   ];
 
   const categoryRoutes = Array.from(new Set(products.map((product) => product.category).filter(Boolean))).map(

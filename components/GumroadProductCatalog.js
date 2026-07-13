@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { formatPrice } from "@/lib/pricing";
+import { productEventParams, trackEvent } from "@/lib/analytics";
+import RegionalPricingNotice from "./RegionalPricingNotice";
 import styles from "./GumroadProductCatalog.module.css";
 
 const CACHE_KEY = "learnstack:gumroad-products:regular:v2";
@@ -65,6 +68,8 @@ export default function GumroadProductCatalog() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
+    trackEvent("catalog_viewed", { catalog: "technical_handbooks" });
+
     let ignore = false;
     const cached = readCache();
 
@@ -165,8 +170,11 @@ export default function GumroadProductCatalog() {
                 <h2>{product.name}</h2>
                 <p>{product.description || "A LearnStack PDF handbook delivered through Gumroad."}</p>
                 <div className={styles.metaRow}>
-                  <strong>{product.priceDisplay}</strong>
-                  <a href={product.url} target="_blank" rel="noopener noreferrer">
+                  <div className={styles.priceInfo}>
+                    <strong>{formatPrice(product)}</strong>
+                    <RegionalPricingNotice product={product} />
+                  </div>
+                  <a href={product.url} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("gumroad_buy_clicked", productEventParams(product, "live_catalog"))}>
                     Buy PDF
                   </a>
                 </div>

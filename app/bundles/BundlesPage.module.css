@@ -92,21 +92,39 @@
 
 .cardBody {
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-rows: minmax(3.3em, auto) minmax(4.7em, auto) auto 1fr;
   gap: 12px;
+  height: 100%;
   padding: clamp(18px, 2.6vw, 24px);
 }
 
 .cardBody h2 {
+  display: -webkit-box;
+  overflow: hidden;
   color: var(--navy);
   font-size: clamp(1.34rem, 2.3vw, 1.7rem);
   line-height: 1.08;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .cardBody p {
+  display: -webkit-box;
+  overflow: hidden;
   color: rgba(13, 27, 62, 0.74);
+  font-size: 0.92rem;
   font-weight: 800;
   line-height: 1.58;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.cardMeta {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 86px;
 }
 
 .cardBody strong {
@@ -114,9 +132,31 @@
   font-size: 1.02rem;
 }
 
+.includedCount,
+.savings {
+  width: max-content;
+  max-width: 100%;
+  border: 2px solid var(--navy);
+  padding: 5px 8px;
+  color: var(--navy);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.includedCount {
+  background: var(--off-white);
+}
+
+.savings {
+  background: #ffd34d;
+}
+
 .cardActions {
   display: grid;
+  align-self: end;
   gap: 9px;
+  margin-top: auto;
 }
 
 .detailsButton,

@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "samples:sync": "node scripts/sync-samples-to-cloudinary.js",
-    "validate:samples": "node scripts/validate-sample-matching.js"
+    "validate:samples": "node scripts/validate-sample-matching.js",
+    "validate:products": "node scripts/validate-product-data.js"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.10",

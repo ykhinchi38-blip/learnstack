@@ -5,6 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { productAudienceLabel, productDetailHref } from "@/lib/productRouting";
+import { productEventParams, trackEvent } from "@/lib/analytics";
+import { formatPrice } from "@/lib/pricing";
+import { hasValidSampleUrl } from "@/lib/sampleMatching";
+import RegionalPricingNotice from "./RegionalPricingNotice";
 import styles from "./ProductCard.module.css";
 
 const categoryAccentColors = {
@@ -12,13 +16,6 @@ const categoryAccentColors = {
   "Data Science": "#4ECDC4",
   "Web Development": "#4a8af4"
 };
-
-const USD_TO_INR_RATE = 93;
-const inrFormatter = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0
-});
 
 function getCardAccent(product) {
   return categoryAccentColors[product.category] || product.accentColor || "#2d6be4";
@@ -28,23 +25,26 @@ function getSpineLabel(product) {
   return (product.logoText || product.title.slice(0, 3)).toUpperCase();
 }
 
-function getDollarAmount(product) {
-  if (String(product.currency || "").toUpperCase() === "USD" && Number(product.price) > 0) {
-    return Number(product.price);
-  }
-
-  const displayPrice = String(product.priceDisplay || "");
-  const dollarMatch = displayPrice.match(/\$\s*([\d,]+(?:\.\d+)?)/);
-
-  return dollarMatch ? Number(dollarMatch[1].replace(/,/g, "")) : 0;
+function unique(values) {
+  return Array.from(new Set(values.filter(Boolean)));
 }
 
-function getRupeeEquivalent(product) {
-  const dollarAmount = getDollarAmount(product);
+function getCardBadges(product) {
+  const isKidsBook = product.audience === "kids";
+  const kidsType = product.activities?.length
+    ? "Story + activities"
+    : product.coloringPages?.length
+      ? "Coloring activities"
+      : product.illustrated || product.illustrations?.length
+        ? "Illustrated PDF"
+        : "";
 
-  if (!dollarAmount) return "";
-
-  return `Approx. ${inrFormatter.format(dollarAmount * USD_TO_INR_RATE)}`;
+  return unique([
+    product.badge,
+    isKidsBook && product.ageRange,
+    isKidsBook && kidsType,
+    product.format || "Digital PDF"
+  ]).slice(0, 3);
 }
 
 function ProductImage({ product, priority = false }) {
@@ -81,7 +81,9 @@ export default function ProductCard({
   buyLabel = "Buy on Gumroad",
   priority = false,
   showSample = false,
-  showRupeeEquivalent = false
+  comparisonSelected = false,
+  comparisonDisabled = false,
+  onToggleComparison
 }) {
   const cardAccent = getCardAccent(product);
   const router = useRouter();
@@ -89,7 +91,8 @@ export default function ProductCard({
   const prefetched = useRef(false);
   const detailHref = productDetailHref(product);
   const cardSummary = product.summary || product.tagline || product.limitedDescription;
-  const rupeeEquivalent = showRupeeEquivalent ? getRupeeEquivalent(product) : "";
+  const displayPrice = formatPrice(product);
+  const badges = getCardBadges(product);
 
   useEffect(() => {
     setOpening(false);
@@ -105,23 +108,27 @@ export default function ProductCard({
   function openDetails() {
     if (opening) return;
     setOpening(true);
+    trackEvent("product_details_clicked", productEventParams(product, "product_card"));
     router.push(detailHref);
   }
 
   return (
-    <article className={styles.card} style={{ "--accent": cardAccent }}>
+    <article className={`${styles.card} ${comparisonSelected ? styles.cardSelected : ""}`} style={{ "--accent": cardAccent }}>
       <div className={styles.accent} />
       <div className={styles.coverWrap}>
         <ProductImage product={product} priority={priority} />
       </div>
 
       <div className={styles.body}>
-        <h3>{product.title}</h3>
-        {cardSummary && <p className={styles.summary}>{cardSummary}</p>}
-        <div className={styles.metaRow}>
-          <strong>{product.priceDisplay || "View price"}</strong>
-          {rupeeEquivalent && <small>{rupeeEquivalent}</small>}
+        <div className={styles.badges} aria-label={`${product.title} format and audience details`}>
+          {badges.map((badge) => <span className={styles.badge} key={badge}>{badge}</span>)}
         </div>
+        <h3>{product.title}</h3>
+        <p className={styles.summary}>{cardSummary || " "}</p>
+        <div className={styles.metaRow}>
+          <strong>{displayPrice}</strong>
+        </div>
+        <RegionalPricingNotice product={product} />
         <div className={styles.actions}>
           {showDetails && (
             <button
@@ -138,13 +145,24 @@ export default function ProductCard({
               <span>{opening ? "Opening..." : "Details"}</span>
             </button>
           )}
-          <Link href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className="brutalButton">
+          <Link href={product.gumroadUrl} target="_blank" rel="noopener noreferrer" className="brutalButton" onClick={() => trackEvent("gumroad_buy_clicked", productEventParams(product, "product_card"))}>
             {buyLabel}
           </Link>
-          {showSample && product.sampleUrl && (
-            <Link href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleButton}>
+          {showSample && hasValidSampleUrl(product) && (
+            <Link href={product.sampleUrl} target="_blank" rel="noopener noreferrer" className={styles.sampleButton} onClick={() => trackEvent("preview_opened", productEventParams(product, "product_card"))}>
               View Free Sample
             </Link>
+          )}
+          {onToggleComparison && (
+            <button
+              type="button"
+              className={styles.compareButton}
+              aria-pressed={comparisonSelected}
+              disabled={comparisonDisabled}
+              onClick={() => onToggleComparison(product)}
+            >
+              {comparisonSelected ? "Added to Compare" : "Compare"}
+            </button>
           )}
         </div>
       </div>

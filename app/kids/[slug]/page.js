@@ -5,6 +5,7 @@ import PageEntrance from "@/components/PageEntrance";
 import { getResourceBySlug } from "@/data/resources";
 import { getKidsProductBySlug, getKidsProducts } from "@/lib/gumroad";
 import { breadcrumbJsonLd, createMetadata, productJsonLd, productSeoDescription } from "@/lib/seo";
+import { getRelatedProducts } from "@/lib/productCatalog";
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }) {
     description: productSeoDescription(product, "kids"),
     path: `/kids/${product.slug || params.slug}`,
     image: product.image || product.coverImage || undefined,
+    imageAlt: `${product.title} kids learning book cover by LearnStack`,
     type: "product"
   });
 }
@@ -42,9 +44,7 @@ export default async function KidsProductDetailPage({ params }) {
   if (!product) notFound();
 
   const productPath = `/kids/${product.slug || params.slug}`;
-  const relatedProducts = products
-    .filter((item) => item.id !== product.id)
-    .slice(0, 3);
+  const relatedProducts = getRelatedProducts(product, products, 3);
   const relatedResources = [
     "best-kids-books-for-curious-children",
     "best-moral-stories-for-kids-with-activities",

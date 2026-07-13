@@ -1,22 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const CONSENT_KEY = "learnstack_cookie_consent";
+import { COOKIE_CONSENT_KEY } from "@/lib/cookieConsent";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
-    if (window.localStorage.getItem(CONSENT_KEY)) return undefined;
+    try {
+      if (window.localStorage.getItem(COOKIE_CONSENT_KEY)) return undefined;
+    } catch {
+      // The banner still works when browser storage is unavailable.
+    }
 
     const timer = window.setTimeout(() => setVisible(true), 1500);
     return () => window.clearTimeout(timer);
   }, []);
 
   function chooseConsent(value) {
-    window.localStorage.setItem(CONSENT_KEY, value);
+    try {
+      window.localStorage.setItem(COOKIE_CONSENT_KEY, value);
+    } catch {
+      // Consent remains session-only when local storage is unavailable.
+    }
+    window.dispatchEvent(new Event("learnstack:cookie-consent"));
     setClosing(true);
     window.setTimeout(() => setVisible(false), 300);
   }

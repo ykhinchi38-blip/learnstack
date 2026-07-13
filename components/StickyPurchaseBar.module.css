@@ -1,0 +1,31 @@
+.bar {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  z-index: 30;
+  display: none;
+  width: min(calc(100% - 24px), 520px);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border: 2px solid var(--navy);
+  background: var(--white);
+  box-shadow: 4px 4px 0 var(--blue);
+  padding: 10px;
+  transform: translateX(-50%);
+}
+
+.bar div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.bar strong { color: var(--navy); }
+.bar span { color: rgba(13, 27, 62, 0.72); font-size: 0.72rem; font-weight: 800; }
+.bar > a:not(:global(.brutalButton)) { color: var(--navy); font-size: 0.82rem; font-weight: 900; text-decoration: underline; }
+.bar :global(.brutalButton) { min-height: 40px; padding: 8px 14px; }
+
+@media (max-width: 760px) {
+  .bar { display: grid; }
+}

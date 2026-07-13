@@ -1,0 +1,110 @@
+.backdrop {
+  position: fixed;
+  z-index: 1250;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(13, 27, 62, 0.42);
+  padding: 24px;
+  animation: reveal 180ms ease both;
+}
+
+.dialog {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  width: min(580px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border: 3px solid var(--navy);
+  background: var(--off-white);
+  box-shadow: 8px 8px 0 var(--blue);
+  color: var(--navy);
+  padding: clamp(24px, 4vw, 34px);
+}
+
+.successIcon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 2px solid var(--navy);
+  background: #ffde59;
+  box-shadow: 3px 3px 0 var(--navy);
+  color: var(--navy);
+  font-size: 1.45rem;
+  font-weight: 950;
+}
+
+.dialog h2 {
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  line-height: 1;
+}
+
+.dialog p {
+  color: var(--text-secondary);
+  font-weight: 750;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.mainMessage {
+  color: var(--navy) !important;
+  font-size: 1.05rem;
+  font-weight: 950 !important;
+}
+
+.note {
+  border-left: 3px solid var(--blue);
+  background: var(--white);
+  color: var(--navy) !important;
+  font-size: 0.88rem;
+  padding: 10px 12px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: 2px solid var(--navy);
+  background: var(--white);
+  box-shadow: 2px 2px 0 #ffde59;
+  color: var(--navy);
+  cursor: pointer;
+  font-weight: 900;
+  padding: 7px 9px;
+}
+
+.actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.actions .brutalButton {
+  width: fit-content;
+}
+
+.booksLink {
+  width: fit-content;
+  color: var(--blue);
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 560px) {
+  .backdrop { padding: 12px; }
+  .dialog { max-height: calc(100vh - 24px); padding: 22px 18px; }
+  .actions .brutalButton { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop { animation: none; }
+}

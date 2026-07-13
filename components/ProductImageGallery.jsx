@@ -8,7 +8,14 @@ function isExternalImage(src = "") {
   return String(src).startsWith("http");
 }
 
-export default function ProductImageGallery({ images = [], title = "LearnStack book" }) {
+export default function ProductImageGallery({
+  images = [],
+  title = "LearnStack book",
+  onPreviewOpen,
+  showGrid = true,
+  triggerLabel,
+  triggerClassName
+}) {
   const [activeIndex, setActiveIndex] = useState(null);
   const isOpen = activeIndex !== null;
   const activeImage = isOpen ? images[activeIndex] : null;
@@ -54,27 +61,45 @@ export default function ProductImageGallery({ images = [], title = "LearnStack b
 
   return (
     <>
-      <div className={styles.previewGrid} aria-label={`${title} preview images`}>
-        {images.map((image, index) => (
-          <button
-            key={image}
-            type="button"
-            className={styles.previewButton}
-            aria-label={`Open ${title} preview image ${index + 1}`}
-            onClick={() => setActiveIndex(index)}
-          >
-            <Image
-              src={image}
-              alt={`${title} preview image ${index + 1}`}
-              className={styles.previewImage}
-              width={420}
-              height={300}
-              sizes="(max-width: 640px) 82vw, 190px"
-              unoptimized={isExternalImage(image)}
-            />
-          </button>
-        ))}
-      </div>
+      {triggerLabel ? (
+        <button
+          type="button"
+          className={triggerClassName || styles.previewButton}
+          onClick={() => {
+            onPreviewOpen?.(0);
+            setActiveIndex(0);
+          }}
+        >
+          {triggerLabel}
+        </button>
+      ) : null}
+
+      {showGrid ? (
+        <div className={styles.previewGrid} aria-label={`${title} preview images`}>
+          {images.map((image, index) => (
+            <button
+              key={image}
+              type="button"
+              className={styles.previewButton}
+              aria-label={`Open ${title} preview image ${index + 1}`}
+              onClick={() => {
+                onPreviewOpen?.(index);
+                setActiveIndex(index);
+              }}
+            >
+              <Image
+                src={image}
+                alt={`${title} preview image ${index + 1}`}
+                className={styles.previewImage}
+                width={420}
+                height={300}
+                sizes="(max-width: 640px) 82vw, 190px"
+                unoptimized={isExternalImage(image)}
+              />
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       {isOpen && (
         <div
